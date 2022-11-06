@@ -23,11 +23,32 @@ public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
-    
+
+    public DataInitSessionBean() {
+    }
+
     
     @PostConstruct
     public void postConstruct() {
-        
+//        if(em.find(Module.class, 1l) == null)
+//        {
+//            initialiseData();
+//        }
     }
+    
+//    private void initialiseData() {
+//        Module module = new Module("IS2103", "Enterprise Systems Server-side Design and Development");
+//        em.persist(module);
+//        em.flush();
+//        module = new Module("IS3106", "Enterprise Systems Interface Design and Development");
+//        em.persist(module);
+//        em.flush();
+//        module = new Module("IS4103", "Information Systems Capstone Project");
+//        em.persist(module);
+//        em.flush();
+//        module = new Module("IS4151", "Pervasive Technology Solutions and Development");
+//        em.persist(module);
+//        em.flush();
+//    }
 
 }
