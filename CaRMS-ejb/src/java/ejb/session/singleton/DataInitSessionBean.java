@@ -27,7 +27,7 @@ public class DataInitSessionBean {
     
     @PostConstruct
     public void postConstruct() {
-        //hi
+        
     }
 
 }
