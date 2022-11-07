@@ -53,10 +53,16 @@ public class Car implements Serializable {
     public Car() {
     }
 
-    public Car(String carLicensePlate) {
+    public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
+        
         this();
         this.carLicensePlate = carLicensePlate;
+        this.carColour = carColour;
+        this.carIsDisabled = carIsDisabled;
+        this.carStatus = carStatus;
+        this.carLocation = carLocation;
     }
+    
     
     public Long getCarId() {
         return carId;
