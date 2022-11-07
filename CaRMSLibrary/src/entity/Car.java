@@ -8,9 +8,14 @@ package entity;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import util.enumeration.CarStatusEnum;
 
 /**
  *
@@ -19,12 +24,31 @@ import javax.persistence.Id;
 @Entity
 public class Car implements Serializable {
 
+    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carId;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 8, max = 32)
     private String carLicensePlate;
+    @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 8, max = 32)
+    private String carColour;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean carIsDisabled;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private CarStatusEnum carStatus;
+    @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 1, max = 32)
+    private String carLocation;
 
     public Car() {
     }
@@ -48,6 +72,62 @@ public class Car implements Serializable {
 
     public void setCarLicensePlate(String carLicensePlate) {
         this.carLicensePlate = carLicensePlate;
+    }
+    
+    /**
+     * @return the carColour
+     */
+    public String getCarColour() {
+        return carColour;
+    }
+
+    /**
+     * @param carColour the carColour to set
+     */
+    public void setCarColour(String carColour) {
+        this.carColour = carColour;
+    }
+
+    /**
+     * @return the carIsDisabled
+     */
+    public Boolean getCarIsDisabled() {
+        return carIsDisabled;
+    }
+
+    /**
+     * @param carIsDisabled the carIsDisabled to set
+     */
+    public void setCarIsDisabled(Boolean carIsDisabled) {
+        this.carIsDisabled = carIsDisabled;
+    }
+
+    /**
+     * @return the carStatus
+     */
+    public CarStatusEnum getCarStatus() {
+        return carStatus;
+    }
+
+    /**
+     * @param carStatus the carStatus to set
+     */
+    public void setCarStatus(CarStatusEnum carStatus) {
+        this.carStatus = carStatus;
+    }
+
+    /**
+     * @return the carLocation
+     */
+    public String getCarLocation() {
+        return carLocation;
+    }
+
+    /**
+     * @param carLocation the carLocation to set
+     */
+    public void setCarLocation(String carLocation) {
+        this.carLocation = carLocation;
     }
 
     @Override
