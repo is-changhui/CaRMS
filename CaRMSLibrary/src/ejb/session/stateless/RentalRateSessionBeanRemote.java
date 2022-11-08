@@ -5,7 +5,15 @@
  */
 package ejb.session.stateless;
 
+import entity.RentalRate;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.DeleteRentalRateRecordException;
+import util.exception.InputDataValidationException;
+import util.exception.RentalRateRecordExistException;
+import util.exception.RentalRateRecordNotFoundException;
+import util.exception.UnknownPersistenceException;
+import util.exception.UpdateRentalRateRecordException;
 
 /**
  *
@@ -13,5 +21,17 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface RentalRateSessionBeanRemote {
+    
+    public Long createNewRentalRate(RentalRate newRentalRate) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<RentalRate> retrieveAllRentalRates();
+
+    public RentalRate retrieveRentalRateById(Long rentalRateId) throws RentalRateRecordNotFoundException;
+
+    public RentalRate retrieveRentalRateByName(String rentalRateName) throws RentalRateRecordNotFoundException;
+
+    public void updateRentalRate(RentalRate rentalRate) throws UpdateRentalRateRecordException, RentalRateRecordNotFoundException;
+
+    public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException, DeleteRentalRateRecordException;
     
 }

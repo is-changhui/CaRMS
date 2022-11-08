@@ -190,8 +190,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
 //    }
 
     
-    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Employee>>constraintViolations)
-    {
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Employee>>constraintViolations) {
         String msg = "Input data validation error!:";
             
         for(ConstraintViolation constraintViolation:constraintViolations)
