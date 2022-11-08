@@ -115,7 +115,6 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     
-    
     // UC12: Update the details of a particular car rental rate record. 
     @Override
     public void updateRentalRate(RentalRate rentalRate) throws UpdateRentalRateRecordException, RentalRateRecordNotFoundException {
@@ -125,10 +124,12 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
             RentalRate rentalRateRecordToUpdate = retrieveRentalRateById(rentalRate.getRentalRateId());
 
             if (rentalRateRecordToUpdate.getRentalRateName().equals(rentalRate.getRentalRateName())) {
+                rentalRateRecordToUpdate.setRentalRateType(rentalRate.getRentalRateType());
                 rentalRateRecordToUpdate.setRentalDailyRate(rentalRate.getRentalDailyRate());
                 rentalRateRecordToUpdate.setRentalRateStartDateTime(rentalRate.getRentalRateStartDateTime());
                 rentalRateRecordToUpdate.setRentalRateEndDateTime(rentalRate.getRentalRateEndDateTime());
                 rentalRateRecordToUpdate.setIsEnabled(rentalRate.getIsEnabled());
+                rentalRateRecordToUpdate.setIsUsed(rentalRate.getIsUsed());
             } else {
                 throw new UpdateRentalRateRecordException("Name of rental rate record to be updated does not match the existing record!");
             }
@@ -147,10 +148,10 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
         if(! rentalRateToRemove.getIsUsed()) {
             em.remove(rentalRateToRemove);
         } else {
-            // New in v4.1 to prevent deleting staff with existing sale transaction(s)
             throw new DeleteRentalRateRecordException("RentalRate ID [" + rentalRateId + "] is being used at the moment and cannot be deleted!");
         }
     }
+    
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RentalRate>>constraintViolations) {
         String msg = "Input data validation error!:";
