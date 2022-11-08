@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +20,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import util.enumeration.RentalRateTypeEnum;
 
 /**
  *
@@ -36,6 +38,10 @@ public class RentalRate implements Serializable {
     @NotNull
 //    @Size(min = 1, max = 32)
     private String rentalRateName;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private RentalRateTypeEnum rentalRateType;
     @NotNull
     @DecimalMin("0.00")
     @Digits(integer = 9, fraction = 2)
@@ -43,11 +49,11 @@ public class RentalRate implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @NotNull
-    private Date rentalRateStartDay;
+    private Date rentalRateStartDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @NotNull
-    private Date rentalRateEndDay;
+    private Date rentalRateEndDateTime;
     @Column(nullable = false)
     @NotNull
     private Boolean isEnabled;
@@ -57,16 +63,6 @@ public class RentalRate implements Serializable {
 
     
     public RentalRate() {
-    }
-
-    public RentalRate(String rentalRateName, BigDecimal rentalDailyRate, Date rentalRateStartDay, Date rentalRateEndDay, Boolean isEnabled, Boolean isUsed) {
-        this();
-        this.rentalRateName = rentalRateName;
-        this.rentalDailyRate = rentalDailyRate;
-        this.rentalRateStartDay = rentalRateStartDay;
-        this.rentalRateEndDay = rentalRateEndDay;
-        this.isEnabled = isEnabled;
-        this.isUsed = isUsed;
     }
     
     public Long getRentalRateId() {
@@ -90,6 +86,20 @@ public class RentalRate implements Serializable {
     public void setRentalRateName(String rentalRateName) {
         this.rentalRateName = rentalRateName;
     }
+    
+    /**
+     * @return the rentalRateType
+     */
+    public RentalRateTypeEnum getRentalRateType() {
+        return rentalRateType;
+    }
+
+    /**
+     * @param rentalRateType the rentalRateType to set
+     */
+    public void setRentalRateType(RentalRateTypeEnum rentalRateType) {
+        this.rentalRateType = rentalRateType;
+    }
 
     /**
      * @return the rentalDailyRate
@@ -106,31 +116,31 @@ public class RentalRate implements Serializable {
     }
 
     /**
-     * @return the rentalRateStartDay
+     * @return the rentalRateStartDateTime
      */
-    public Date getRentalRateStartDay() {
-        return rentalRateStartDay;
+    public Date getRentalRateStartDateTime() {
+        return rentalRateStartDateTime;
     }
 
     /**
-     * @param rentalRateStartDay the rentalRateStartDay to set
+     * @param rentalRateStartDateTime the rentalRateStartDateTime to set
      */
-    public void setRentalRateStartDay(Date rentalRateStartDay) {
-        this.rentalRateStartDay = rentalRateStartDay;
+    public void setRentalRateStartDateTime(Date rentalRateStartDateTime) {
+        this.rentalRateStartDateTime = rentalRateStartDateTime;
     }
 
     /**
-     * @return the rentalRateEndDay
+     * @return the rentalRateEndDateTime
      */
-    public Date getRentalRateEndDay() {
-        return rentalRateEndDay;
+    public Date getRentalRateEndDateTime() {
+        return rentalRateEndDateTime;
     }
 
     /**
-     * @param rentalRateEndDay the rentalRateEndDay to set
+     * @param rentalRateEndDateTime the rentalRateEndDateTime to set
      */
-    public void setRentalRateEndDay(Date rentalRateEndDay) {
-        this.rentalRateEndDay = rentalRateEndDay;
+    public void setRentalRateEndDateTime(Date rentalRateEndDateTime) {
+        this.rentalRateEndDateTime = rentalRateEndDateTime;
     }
 
     /**

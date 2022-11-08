@@ -28,7 +28,7 @@ public class MainApp {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
     }
     
-    
+
     public void runApp() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
