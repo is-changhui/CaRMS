@@ -14,7 +14,7 @@ public enum CarStatusEnum {
     AVAILABLE,
     RESERVED,
     RENTED,
-    MAINTENANCE,
+    REPAIR,
     INTRANSIT
     
 }

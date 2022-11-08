@@ -32,11 +32,11 @@ public class Car implements Serializable {
     private Long carId;
     @Column(nullable = false, length = 32)
     @NotNull
-    @Size(min = 8, max = 32)
+//    @Size(min = 8, max = 32)
     private String carLicensePlate;
     @Column(nullable = false, length = 32)
     @NotNull
-    @Size(min = 8, max = 32)
+//    @Size(min = 8, max = 32)
     private String carColour;
     @Column(nullable = false)
     @NotNull
@@ -47,10 +47,12 @@ public class Car implements Serializable {
     private CarStatusEnum carStatus;
     @Column(nullable = false, length = 32)
     @NotNull
-    @Size(min = 1, max = 32)
+//    @Size(min = 1, max = 32)
     private String carLocation;
-
+    
+    
     public Car() {
+        carIsDisabled = false;
     }
 
     public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
