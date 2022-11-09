@@ -5,7 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.CarModel;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.CarModelExistException;
+import util.exception.CarModelNotFoundException;
+import util.exception.InputDataValidationException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +19,11 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface CarModelSessionBeanRemote {
-    
+
+    public Long createNewCarModel(CarModel newCarModel) throws CarModelExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<CarModel> retrieveAllCarModels();
+
+    public CarModel retrieveCarModelByCarModelId(Long carModelId) throws CarModelNotFoundException;
+
 }
