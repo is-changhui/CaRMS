@@ -43,6 +43,8 @@ public class Outlet implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Date outletClosingHour;
+    
+    
 
     public Outlet() {
     }

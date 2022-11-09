@@ -13,8 +13,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import util.enumeration.CarStatusEnum;
 
 /**
@@ -50,9 +51,14 @@ public class Car implements Serializable {
     @NotNull
 //    @Size(min = 1, max = 32)
     private String carLocation;
+    
     @ManyToOne (optional = false)
     @JoinColumn(nullable = false)
     private CarModel carModel;
+    
+    @ManyToOne (optional = false)
+    @JoinColumn(nullable = false)
+    private Outlet outlet;
     
     
     
