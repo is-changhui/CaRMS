@@ -40,6 +40,9 @@ public class Car implements Serializable {
     private String carColour;
     @Column(nullable = false)
     @NotNull
+    private Boolean carIsUsed;
+    @Column(nullable = false)
+    @NotNull
     private Boolean carIsDisabled;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -51,19 +54,23 @@ public class Car implements Serializable {
     private String carLocation;
     
     
+    
+    
     public Car() {
         carIsDisabled = false;
     }
 
-    public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
-        
+    public Car(String carLicensePlate, String carColour, Boolean carIsUsed, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
         this();
         this.carLicensePlate = carLicensePlate;
         this.carColour = carColour;
+        this.carIsUsed = carIsUsed;
         this.carIsDisabled = carIsDisabled;
         this.carStatus = carStatus;
         this.carLocation = carLocation;
     }
+    
+    
     
     
     public Long getCarId() {
@@ -97,17 +104,17 @@ public class Car implements Serializable {
     }
 
     /**
-     * @return the carIsDisabled
+     * @return the carIsUsed
      */
-    public Boolean getCarIsDisabled() {
+    public Boolean getCarIsUsed() {
         return carIsDisabled;
     }
 
     /**
-     * @param carIsDisabled the carIsDisabled to set
+     * @param carIsUsed the carIsUsed to set
      */
-    public void setCarIsDisabled(Boolean carIsDisabled) {
-        this.carIsDisabled = carIsDisabled;
+    public void setCarIsUsed(Boolean carIsUsed) {
+        this.carIsDisabled = carIsUsed;
     }
 
     /**
@@ -137,6 +144,8 @@ public class Car implements Serializable {
     public void setCarLocation(String carLocation) {
         this.carLocation = carLocation;
     }
+    
+    
 
     @Override
     public int hashCode() {
@@ -161,6 +170,14 @@ public class Car implements Serializable {
     @Override
     public String toString() {
         return "entity.Car[ id=" + carId + " ]";
+    }
+
+    public Boolean getCarIsDisabled() {
+        return carIsDisabled;
+    }
+
+    public void setCarIsDisabled(Boolean carIsDisabled) {
+        this.carIsDisabled = carIsDisabled;
     }
     
 }
