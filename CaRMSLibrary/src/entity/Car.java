@@ -24,8 +24,6 @@ import util.enumeration.CarStatusEnum;
 @Entity
 public class Car implements Serializable {
 
-    
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +50,10 @@ public class Car implements Serializable {
     @NotNull
 //    @Size(min = 1, max = 32)
     private String carLocation;
+    @ManyToOne (optional = false)
+    @JoinColumn(nullable = false)
+    private CarModel carModel;
+    
     
     
     
