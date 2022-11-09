@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entity.Employee;
 import entity.RentalRate;
 import java.util.List;
 import java.util.Set;
@@ -141,14 +140,17 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     
     // UC13
     @Override
-    public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException, DeleteRentalRateRecordException {
+    public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException {
         
-        RentalRate rentalRateToRemove = retrieveRentalRateById(rentalRateId);
-        
-        if(! rentalRateToRemove.getIsUsed()) {
-            em.remove(rentalRateToRemove);
-        } else {
-            throw new DeleteRentalRateRecordException("RentalRate ID [" + rentalRateId + "] is being used at the moment and cannot be deleted!");
+        try {
+            RentalRate rentalRateToRemove = retrieveRentalRateById(rentalRateId);
+            if (! rentalRateToRemove.getIsUsed()) {
+                em.remove(rentalRateToRemove);
+            } else {
+                rentalRateToRemove.setIsEnabled(Boolean.FALSE);
+            }
+        } catch (RentalRateRecordNotFoundException ex) {
+            throw new RentalRateRecordNotFoundException("RentalRate ID [" + rentalRateId + "] is being used at the moment and cannot be deleted!");
         }
     }
     
