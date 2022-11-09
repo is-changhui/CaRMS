@@ -15,8 +15,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
@@ -74,8 +75,29 @@ public class RentalReservation implements Serializable {
     @JoinColumn(nullable = false)
     private Car reservedCar;
     
-    @OneToMany
+    @ManyToMany
     private List<RentalRate> rentalRates;
+    
+    @OneToOne(mappedBy = "rentalReservation")
+    private TransitDriverDispatchRecord transitDriverDispatchRecord;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Customer customer;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Outlet pickUpOutlet;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Outlet returnOutlet;
+    
+    @OneToOne
+    private CarPickup carPickupRecord;
+    
+    @OneToOne
+    private CarReturn carReturnRecord;
 
     
     public RentalReservation() {

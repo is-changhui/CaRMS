@@ -29,6 +29,8 @@ public class DataInitSessionBean {
 
     @EJB(name = "EmployeeSessionBeanLocal")
     private EmployeeSessionBeanLocal employeeSessionBeanLocal;
+
+    
     
 
     public DataInitSessionBean() {

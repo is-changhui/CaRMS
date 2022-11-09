@@ -43,20 +43,20 @@ public class MainApp {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if(response == 1) {
-                    System.out.println("Login successful!\n");
-//                    try {
-//                        doLogin();
-//                        System.out.println("Login successful!\n");
-//                    } catch(InvalidLoginCredentialException ex) {
-//                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
-//                    }
+//                    System.out.println("Login successful!\n");
+                    try {
+                        doLogin();
+                        System.out.println("Login successful!\n");
+                    } catch (InvalidLoginCredentialException ex) {
+                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                    }
                 } else if (response == 2) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");                
                 }
             }
-            if(response == 2) {
+            if (response == 2) {
                 break;
             }
         }

@@ -50,12 +50,12 @@ public class Employee implements Serializable {
     @NotNull
     private EmployeeAccessRightEnum employeeAccessRight;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet outlet;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet outlet;
     
-    @OneToMany(mappedBy = "transitDriver")
-    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
+//    @OneToMany(mappedBy = "transitDriver")
+//    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
     
     
 
