@@ -25,6 +25,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Outlet implements Serializable {
 
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,9 +62,11 @@ public class Outlet implements Serializable {
     @OneToMany(mappedBy = "destinationOutlet")
     private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
 
+
     public Outlet() {
     }
 
+    
     public Outlet(String outletName, String outletAddress, Date outletOpeningHour, Date outletClosingHour) {
         this();
         this.outletName = outletName;
