@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import util.enumeration.CarStatusEnum;
 
@@ -37,9 +39,9 @@ public class Car implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String carColour;
-    @Column(nullable = false)
-    @NotNull
-    private Boolean carIsUsed;
+//    @Column(nullable = false)
+//    @NotNull
+//    private Boolean carIsUsed;
     @Column(nullable = false)
     @NotNull
     private Boolean carIsDisabled;
@@ -52,15 +54,16 @@ public class Car implements Serializable {
 //    @Size(min = 1, max = 32)
     private String carLocation;
     
-    @ManyToOne (optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CarModel carModel;
     
-    @ManyToOne (optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Outlet outlet;
     
-    
+    @OneToMany(mappedBy = "reservedCar")
+    private List<RentalReservation> rentalReservations;
     
     
     
@@ -68,16 +71,14 @@ public class Car implements Serializable {
         carIsDisabled = false;
     }
 
-    public Car(String carLicensePlate, String carColour, Boolean carIsUsed, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
+    public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
         this();
         this.carLicensePlate = carLicensePlate;
         this.carColour = carColour;
-        this.carIsUsed = carIsUsed;
         this.carIsDisabled = carIsDisabled;
         this.carStatus = carStatus;
         this.carLocation = carLocation;
     }
-    
     
     
     

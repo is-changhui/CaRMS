@@ -6,11 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -29,7 +31,12 @@ public class CarCategory implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String categoryName;
-
+    
+    @OneToMany(mappedBy = "carCategory")
+    private List<CarModel> carModel;
+    
+    @OneToMany(mappedBy = "carCategory")
+    private List<RentalRate> rentalRates;
     
     public CarCategory() {
     }

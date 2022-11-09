@@ -15,6 +15,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
@@ -60,7 +62,12 @@ public class RentalRate implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean isUsed;
-
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private CarCategory carCategory;
+    
+    
     
     public RentalRate() {
     }
