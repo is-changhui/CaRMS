@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -41,6 +42,11 @@ public class Customer implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String customerPassword;
+    
+    @ManyToOne(optional = true)
+    private Partner partner;
+    
+    
 
     
     public Customer() {
