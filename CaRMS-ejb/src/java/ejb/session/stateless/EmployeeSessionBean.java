@@ -51,38 +51,25 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     
     
     @Override
-    public Long createNewEmployee(Employee newEmployee) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException
-    {
+    public Long createNewEmployee(Employee newEmployee) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException {
         Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(newEmployee);
         
-        if(constraintViolations.isEmpty())
-        {
-            try
-            {
+        if (constraintViolations.isEmpty()) {
+            try {
                 em.persist(newEmployee);
                 return newEmployee.getEmployeeId();
-            }
-            catch(PersistenceException ex)
-            {
-                if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException"))
-                {
-                    if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
-                    {
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                    if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
                         throw new EmployeeUsernameExistException();
-                    }
-                    else
-                    {
+                    } else {
                         throw new UnknownPersistenceException(ex.getMessage());
                     }
-                }
-                else
-                {
+                } else {
                     throw new UnknownPersistenceException(ex.getMessage());
                 }
             }
-        }
-        else
-        {
+        } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
@@ -90,26 +77,20 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     
     
     @Override
-    public List<Employee> retrieveAllEmployees()
-    {
+    public List<Employee> retrieveAllEmployees() {
         Query query = em.createQuery("SELECT e FROM Employee e");
-        
         return query.getResultList();
     }
     
     
     
     @Override
-    public Employee retrieveEmployeeByEmployeeId(Long employeeId) throws EmployeeNotFoundException
-    {
+    public Employee retrieveEmployeeByEmployeeId(Long employeeId) throws EmployeeNotFoundException {
         Employee employeeEntity = em.find(Employee.class, employeeId);
         
-        if(employeeEntity != null)
-        {
+        if (employeeEntity != null) {
             return employeeEntity;
-        }
-        else
-        {
+        } else {
             throw new EmployeeNotFoundException("Employee ID " + employeeId + " does not exist!");
         }
     }
@@ -117,17 +98,13 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     
     
     @Override
-    public Employee retrieveEmployeeByUsername(String username) throws EmployeeNotFoundException
-    {
+    public Employee retrieveEmployeeByUsername(String username) throws EmployeeNotFoundException {
         Query query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeUsername = :inEmployeeUsername");
         query.setParameter("inEmployeeUsername", username);
         
-        try
-        {
+        try {
             return (Employee)query.getSingleResult();
-        }
-        catch(NoResultException | NonUniqueResultException ex)
-        {
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new EmployeeNotFoundException("Employee Username " + username + " does not exist!");
         }
     }
@@ -135,23 +112,16 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     
     
     @Override
-    public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException
-    {
-        try
-        {
+    public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException {
+        try {
             Employee employeeEntity = retrieveEmployeeByUsername(username);
             
-            if (employeeEntity.getEmployeePassword().equals(password))
-            {              
+            if (employeeEntity.getEmployeePassword().equals(password)) {              
                 return employeeEntity;
-            }
-            else
-            {
+            } else {
                 throw new InvalidLoginCredentialException("Invalid username and/or password!");
             }
-        }
-        catch(EmployeeNotFoundException ex)
-        {
+        } catch (EmployeeNotFoundException ex) {
             throw new InvalidLoginCredentialException("Invalid username and/or password!");
         }
     }
@@ -193,8 +163,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Employee>>constraintViolations) {
         String msg = "Input data validation error!:";
             
-        for(ConstraintViolation constraintViolation:constraintViolations)
-        {
+        for (ConstraintViolation constraintViolation:constraintViolations) {
             msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
         }
         

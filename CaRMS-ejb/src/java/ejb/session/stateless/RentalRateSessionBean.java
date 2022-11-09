@@ -108,7 +108,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
         
         try {
             return (RentalRate)query.getSingleResult();
-        } catch(NoResultException | NonUniqueResultException ex) {
+        } catch (NoResultException | NonUniqueResultException ex) {
             throw new RentalRateRecordNotFoundException("RentalRate name [" + rentalRateName + "] does not exist!");
         }
     }
@@ -158,11 +158,10 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RentalRate>>constraintViolations) {
         String msg = "Input data validation error!:";
             
-        for(ConstraintViolation constraintViolation:constraintViolations)
+        for (ConstraintViolation constraintViolation:constraintViolations)
         {
             msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
         }
-        
         return msg;
     }
 }
