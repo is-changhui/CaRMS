@@ -32,11 +32,11 @@ public class CarCategory implements Serializable {
 //    @Size(min = 8, max = 32)
     private String categoryName;
     
-    @OneToMany(mappedBy = "carCategory")
-    private List<CarModel> carModel;
-    
-    @OneToMany(mappedBy = "carCategory")
-    private List<RentalRate> rentalRates;
+//    @OneToMany(mappedBy = "carCategory")
+//    private List<CarModel> carModel;
+//    
+//    @OneToMany(mappedBy = "carCategory")
+//    private List<RentalRate> rentalRates;
     
     public CarCategory() {
     }

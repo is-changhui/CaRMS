@@ -36,9 +36,9 @@ public class CarPickup implements Serializable {
     @NotNull
     private Date pickupDate;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet outlet;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet outlet;
     
     public CarPickup() {
     }

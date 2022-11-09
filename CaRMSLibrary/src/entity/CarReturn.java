@@ -35,9 +35,9 @@ public class CarReturn implements Serializable {
     @NotNull
     private Date returnDate;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet outlet;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet outlet;
 
     
     public CarReturn() {

@@ -63,9 +63,9 @@ public class RentalRate implements Serializable {
     @NotNull
     private Boolean isUsed;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private CarCategory carCategory;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private CarCategory carCategory;
     
     
     

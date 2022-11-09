@@ -45,11 +45,11 @@ public class Customer implements Serializable {
 //    @Size(min = 8, max = 32)
     private String customerPassword;
     
-    @ManyToOne(optional = true)
-    private Partner partner;
-    
-    @OneToMany(mappedBy = "customer")
-    private List<RentalReservation> rentalReservations;
+//    @ManyToOne(optional = true)
+//    private Partner partner;
+//    
+//    @OneToMany(mappedBy = "customer")
+//    private List<RentalReservation> rentalReservations;
 
     
     public Customer() {

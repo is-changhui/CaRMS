@@ -42,12 +42,12 @@ public class CarModel implements Serializable {
     @NotNull
     private boolean modelIsDisabled;
     
-    @OneToMany
-    private List<Car> cars;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private CarCategory carCategory;
+//    @OneToMany
+//    private List<Car> cars;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private CarCategory carCategory;
     
     
 

@@ -54,16 +54,16 @@ public class Car implements Serializable {
 //    @Size(min = 1, max = 32)
     private String carLocation;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private CarModel carModel;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet outlet;
-    
-    @OneToMany(mappedBy = "reservedCar")
-    private List<RentalReservation> rentalReservations;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private CarModel carModel;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet outlet;
+//    
+//    @OneToMany(mappedBy = "reservedCar")
+//    private List<RentalReservation> rentalReservations;
     
     
     

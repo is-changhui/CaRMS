@@ -71,33 +71,33 @@ public class RentalReservation implements Serializable {
     @NotNull
     private Date rentalReservationReturnDate;
     
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Car reservedCar;
-    
-    @ManyToMany
-    private List<RentalRate> rentalRates;
-    
-    @OneToOne(mappedBy = "rentalReservation")
-    private TransitDriverDispatchRecord transitDriverDispatchRecord;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Customer customer;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet pickUpOutlet;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Outlet returnOutlet;
-    
-    @OneToOne
-    private CarPickup carPickupRecord;
-    
-    @OneToOne
-    private CarReturn carReturnRecord;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Car reservedCar;
+//    
+//    @ManyToMany
+//    private List<RentalRate> rentalRates;
+//    
+//    @OneToOne(mappedBy = "rentalReservation")
+//    private TransitDriverDispatchRecord transitDriverDispatchRecord;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Customer customer;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet pickUpOutlet;
+//    
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Outlet returnOutlet;
+//    
+//    @OneToOne
+//    private CarPickup carPickupRecord;
+//    
+//    @OneToOne
+//    private CarReturn carReturnRecord;
 
     
     public RentalReservation() {

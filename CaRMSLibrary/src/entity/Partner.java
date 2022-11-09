@@ -40,8 +40,8 @@ public class Partner implements Serializable {
 //    @Size(min = 8, max = 32)
     private String partnerPassword;
     
-    @OneToMany(mappedBy = "partner")
-    private List<Customer> customers;
+//    @OneToMany(mappedBy = "partner")
+//    private List<Customer> customers;
 
     
     public Partner() {
