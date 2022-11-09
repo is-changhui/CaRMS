@@ -39,9 +39,9 @@ public class Car implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String carColour;
-    @Column(nullable = false)
-    @NotNull
-    private Boolean carIsUsed;
+//    @Column(nullable = false)
+//    @NotNull
+//    private Boolean carIsUsed;
     @Column(nullable = false)
     @NotNull
     private Boolean carIsDisabled;
@@ -71,16 +71,14 @@ public class Car implements Serializable {
         carIsDisabled = false;
     }
 
-    public Car(String carLicensePlate, String carColour, Boolean carIsUsed, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
+    public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
         this();
         this.carLicensePlate = carLicensePlate;
         this.carColour = carColour;
-        this.carIsUsed = carIsUsed;
         this.carIsDisabled = carIsDisabled;
         this.carStatus = carStatus;
         this.carLocation = carLocation;
     }
-    
     
     
     
