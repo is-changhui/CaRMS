@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class CarReturn implements Serializable {
 
-
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,13 +37,14 @@ public class CarReturn implements Serializable {
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private Outlet outlet;
+    private Outlet returnOutlet;
 
     
     public CarReturn() {
     }
 
     public CarReturn(Date returnDate) {
+        this();
         this.returnDate = returnDate;
     }
     
@@ -67,6 +68,20 @@ public class CarReturn implements Serializable {
      */
     public void setReturnDate(Date returnDate) {
         this.returnDate = returnDate;
+    }
+    
+     /**
+     * @return the returnOutlet
+     */
+    public Outlet getReturnOutlet() {
+        return returnOutlet;
+    }
+
+    /**
+     * @param returnOutlet the returnOutlet to set
+     */
+    public void setReturnOutlet(Outlet returnOutlet) {
+        this.returnOutlet = returnOutlet;
     }
 
     @Override

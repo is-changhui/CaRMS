@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import util.enumeration.EmployeeAccessRightEnum;
 
@@ -25,6 +28,7 @@ import util.enumeration.EmployeeAccessRightEnum;
 @Entity
 public class Employee implements Serializable {
 
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,17 +50,17 @@ public class Employee implements Serializable {
     @NotNull
     private EmployeeAccessRightEnum employeeAccessRight;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Outlet outlet;
     
-//    @OneToMany(mappedBy = "transitDriver")
-//    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
+    @OneToMany(mappedBy = "transitDriver")
+    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
     
-    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Outlet outlet;
 
     
     public Employee() {
+        transitDriverDispatchRecords = new ArrayList<>();
     }
 
     public Employee(String employeeName, String employeeUsername, String employeePassword, EmployeeAccessRightEnum employeeAccessRight) {
@@ -66,7 +70,16 @@ public class Employee implements Serializable {
         this.employeePassword = employeePassword;
         this.employeeAccessRight = employeeAccessRight;
     }
-    
+
+//    public Employee(String employeeName, String employeeUsername, String employeePassword, EmployeeAccessRightEnum employeeAccessRight, Outlet outlet) {
+//        this();
+//        this.employeeName = employeeName;
+//        this.employeeUsername = employeeUsername;
+//        this.employeePassword = employeePassword;
+//        this.employeeAccessRight = employeeAccessRight;
+//        this.outlet = outlet;
+//    }
+
     public Long getEmployeeId() {
         return employeeId;
     }
@@ -132,18 +145,32 @@ public class Employee implements Serializable {
     }
     
     /**
+     * @return the transitDriverDispatchRecords
+     */
+    public List<TransitDriverDispatchRecord> getTransitDriverDispatchRecords() {
+        return transitDriverDispatchRecords;
+    }
+
+    /**
+     * @param transitDriverDispatchRecords the transitDriverDispatchRecords to set
+     */
+    public void setTransitDriverDispatchRecords(List<TransitDriverDispatchRecord> transitDriverDispatchRecords) {
+        this.transitDriverDispatchRecords = transitDriverDispatchRecords;
+    }
+
+    /**
      * @return the outlet
      */
-//    public Outlet getOutlet() {
-//        return outlet;
-//    }
+    public Outlet getOutlet() {
+        return outlet;
+    }
 
     /**
      * @param outlet the outlet to set
      */
-//    public void setOutlet(Outlet outlet) {
-//        this.outlet = outlet;
-//    }
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
+    }
 
     @Override
     public int hashCode() {

@@ -60,7 +60,7 @@ public class Car implements Serializable {
     @JoinColumn(nullable = false)
     private CarModel carModel;
     
-    @OneToOne(optional = true, mappedBy = "reservedCar")
+    @OneToOne(optional = true, mappedBy = "car")
     private RentalReservation rentalReservation;
     
     @ManyToOne(optional = true)

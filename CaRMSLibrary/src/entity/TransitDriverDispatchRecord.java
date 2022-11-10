@@ -42,24 +42,24 @@ public class TransitDriverDispatchRecord implements Serializable {
 //    @Size(min = 2, max = 24)
     private Long dispatchDuration;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Outlet destinationOutlet;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Outlet destinationOutlet;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Employee transitDriver;
+    @ManyToOne(optional = true)
+    @JoinColumn(nullable = false)
     
-//    @OneToOne
-//    @JoinColumn(nullable = false)
-//    private RentalReservation rentalReservation;
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private RentalReservation rentalReservation;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Car car;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Car car;
     
 
     public TransitDriverDispatchRecord() {
+        transitIsComplete = false;
     }
 
     public TransitDriverDispatchRecord(Boolean transitIsComplete, Date dispatchDate, Long dispatchDuration) {

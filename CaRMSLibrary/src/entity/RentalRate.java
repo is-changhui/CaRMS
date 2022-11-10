@@ -31,7 +31,7 @@ import util.enumeration.RentalRateTypeEnum;
 @Entity
 public class RentalRate implements Serializable {
 
-
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,16 +44,17 @@ public class RentalRate implements Serializable {
     @Column(nullable = false)
     @NotNull
     private RentalRateTypeEnum rentalRateType;
+    @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
     @Digits(integer = 9, fraction = 2)
     private BigDecimal rentalDailyRate;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = true)
     @NotNull
     private Date rentalRateStartDateTime;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = true)
     @NotNull
     private Date rentalRateEndDateTime;
     @Column(nullable = false)
@@ -68,10 +69,22 @@ public class RentalRate implements Serializable {
     private CarCategory carCategory;
     
     
-    
     public RentalRate() {
+        isEnabled = true;
+        isUsed = false;
     }
-    
+
+    public RentalRate(String rentalRateName, RentalRateTypeEnum rentalRateType, BigDecimal rentalDailyRate, Date rentalRateStartDateTime, Date rentalRateEndDateTime, Boolean isEnabled, Boolean isUsed) {
+        this();
+        this.rentalRateName = rentalRateName;
+        this.rentalRateType = rentalRateType;
+        this.rentalDailyRate = rentalDailyRate;
+        this.rentalRateStartDateTime = rentalRateStartDateTime;
+        this.rentalRateEndDateTime = rentalRateEndDateTime;
+        this.isEnabled = isEnabled;
+        this.isUsed = isUsed;
+    }
+
     public Long getRentalRateId() {
         return rentalRateId;
     }
@@ -176,6 +189,20 @@ public class RentalRate implements Serializable {
      */
     public void setIsUsed(Boolean isUsed) {
         this.isUsed = isUsed;
+    }
+    
+    /**
+     * @return the carCategory
+     */
+    public CarCategory getCarCategory() {
+        return carCategory;
+    }
+
+    /**
+     * @param carCategory the carCategory to set
+     */
+    public void setCarCategory(CarCategory carCategory) {
+        this.carCategory = carCategory;
     }
 
     @Override

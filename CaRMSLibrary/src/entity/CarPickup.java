@@ -25,7 +25,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class CarPickup implements Serializable {
 
-    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,7 +37,7 @@ public class CarPickup implements Serializable {
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private Outlet outlet;
+    private Outlet pickupOutlet;
     
     
     
@@ -50,7 +49,6 @@ public class CarPickup implements Serializable {
         this.pickupDate = pickupDate;
     }
     
-
 
     public Long getPickupId() {
         return pickupId;
@@ -72,6 +70,20 @@ public class CarPickup implements Serializable {
      */
     public void setPickupDate(Date pickupDate) {
         this.pickupDate = pickupDate;
+    }
+    
+    /**
+     * @return the pickupOutlet
+     */
+    public Outlet getPickupOutlet() {
+        return pickupOutlet;
+    }
+
+    /**
+     * @param pickupOutlet the pickupOutlet to set
+     */
+    public void setPickupOutlet(Outlet pickupOutlet) {
+        this.pickupOutlet = pickupOutlet;
     }
 
     @Override

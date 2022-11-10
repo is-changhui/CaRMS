@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,36 +39,44 @@ public class Outlet implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String outletAddress;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, length = 32)
 //    @NotNull
 //    @Size(min = 8, max = 32)
-    private String outletOpeningHour;
-//    @Temporal(TemporalType.TIMESTAMP)
+    private Date outletOpeningHour;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, length = 32)
 //    @NotNull
-    private String outletClosingHour;
+//    @Size(min = 8, max = 32)
+    private Date outletClosingHour;
     
-//    @OneToMany(mappedBy = "outlet")
-//    private List<Car> cars;
     
-//    @OneToMany(mappedBy = "outlet")
-//    private List<Employee> employees;
+    @OneToMany(mappedBy = "outlet")
+    private List<Employee> employees;
     
-//    @OneToMany(mappedBy = "outlet")
-//    private List<CarPickup> carPickupRecords;
+    @OneToMany(mappedBy = "destinationOutlet")
+    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
     
-//    @OneToMany(mappedBy = "outlet")
-//    private List<CarReturn> carReturnRecords;
+    @OneToMany(mappedBy = "outlet")
+    private List<Car> cars;
     
-//    @OneToMany(mappedBy = "destinationOutlet")
-//    private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
+    @OneToMany(mappedBy = "pickupOutlet")
+    private List<CarPickup> carPickupRecords;
+    
+    @OneToMany(mappedBy = "returnOutlet")
+    private List<CarReturn> carReturnRecords;
     
 
     public Outlet() {
+        employees = new ArrayList<>(); 
+        transitDriverDispatchRecords = new ArrayList<>();
+        cars = new ArrayList<>();
+        carPickupRecords = new ArrayList<>();
+        carReturnRecords = new ArrayList<>();
     }
 
     
-    public Outlet(String outletName, String outletAddress, String outletOpeningHour, String outletClosingHour) {
+    public Outlet(String outletName, String outletAddress, Date outletOpeningHour, Date outletClosingHour) {
         this();
         this.outletName = outletName;
         this.outletAddress = outletAddress;
@@ -108,43 +120,105 @@ public class Outlet implements Serializable {
     public void setOutletAddress(String outletAddress) {
         this.outletAddress = outletAddress;
     }
-
+    
     /**
      * @return the outletOpeningHour
      */
-    public String getOutletOpeningHour() {
+    public Date getOutletOpeningHour() {
         return outletOpeningHour;
     }
 
     /**
      * @param outletOpeningHour the outletOpeningHour to set
      */
-    public void setOutletOpeningHour(String outletOpeningHour) {
+    public void setOutletOpeningHour(Date outletOpeningHour) {
         this.outletOpeningHour = outletOpeningHour;
     }
 
     /**
      * @return the outletClosingHour
      */
-    public String getOutletClosingHour() {
+    public Date getOutletClosingHour() {
         return outletClosingHour;
     }
 
     /**
      * @param outletClosingHour the outletClosingHour to set
      */
-    public void setOutletClosingHour(String outletClosingHour) {
+    public void setOutletClosingHour(Date outletClosingHour) {
         this.outletClosingHour = outletClosingHour;
     }
     
-//    public List<Employee> getEmployees() {
-//        return employees;
-//    }
+    /**
+     * @return the employees
+     */
+    public List<Employee> getEmployees() {
+        return employees;
+    }
 
-//    public void setEmployees(List<Employee> employees) {
-//        this.employees = employees;
-//    }
+    /**
+     * @param employees the employees to set
+     */
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
+    }
 
+    /**
+     * @return the transitDriverDispatchRecords
+     */
+    public List<TransitDriverDispatchRecord> getTransitDriverDispatchRecords() {
+        return transitDriverDispatchRecords;
+    }
+
+    /**
+     * @param transitDriverDispatchRecords the transitDriverDispatchRecords to set
+     */
+    public void setTransitDriverDispatchRecords(List<TransitDriverDispatchRecord> transitDriverDispatchRecords) {
+        this.transitDriverDispatchRecords = transitDriverDispatchRecords;
+    }
+
+    /**
+     * @return the cars
+     */
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    /**
+     * @param cars the cars to set
+     */
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
+    /**
+     * @return the carPickupRecords
+     */
+    public List<CarPickup> getCarPickupRecords() {
+        return carPickupRecords;
+    }
+
+    /**
+     * @param carPickupRecords the carPickupRecords to set
+     */
+    public void setCarPickupRecords(List<CarPickup> carPickupRecords) {
+        this.carPickupRecords = carPickupRecords;
+    }
+
+    /**
+     * @return the carReturnRecords
+     */
+    public List<CarReturn> getCarReturnRecords() {
+        return carReturnRecords;
+    }
+
+    /**
+     * @param carReturnRecords the carReturnRecords to set
+     */
+    public void setCarReturnRecords(List<CarReturn> carReturnRecords) {
+        this.carReturnRecords = carReturnRecords;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

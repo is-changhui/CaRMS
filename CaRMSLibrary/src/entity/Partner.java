@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,11 +41,16 @@ public class Partner implements Serializable {
 //    @Size(min = 8, max = 32)
     private String partnerPassword;
     
-//    @OneToMany(mappedBy = "partner")
-//    private List<Customer> customers;
-
+    @OneToMany(mappedBy = "partner")
+    private List<Customer> partnerCustomers;
+    
+    @OneToMany(mappedBy = "partner")
+    private List<RentalReservation> partnerRentalReservations;
+    
     
     public Partner() {
+        partnerCustomers = new ArrayList<>();
+        partnerRentalReservations = new ArrayList<>();
     }
     
     public Partner(String partnerName, String partnerUsername, String partnerPassword) {
@@ -102,6 +108,34 @@ public class Partner implements Serializable {
      */
     public void setPartnerPassword(String partnerPassword) {
         this.partnerPassword = partnerPassword;
+    }
+    
+    /**
+     * @return the partnerCustomers
+     */
+    public List<Customer> getPartnerCustomers() {
+        return partnerCustomers;
+    }
+
+    /**
+     * @param partnerCustomers the partnerCustomers to set
+     */
+    public void setPartnerCustomers(List<Customer> partnerCustomers) {
+        this.partnerCustomers = partnerCustomers;
+    }
+
+    /**
+     * @return the partnerRentalReservations
+     */
+    public List<RentalReservation> getPartnerRentalReservations() {
+        return partnerRentalReservations;
+    }
+
+    /**
+     * @param partnerRentalReservations the partnerRentalReservations to set
+     */
+    public void setPartnerRentalReservations(List<RentalReservation> partnerRentalReservations) {
+        this.partnerRentalReservations = partnerRentalReservations;
     }
 
     @Override

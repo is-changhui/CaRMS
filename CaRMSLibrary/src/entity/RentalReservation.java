@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -32,7 +33,6 @@ import javax.validation.constraints.NotNull;
 public class RentalReservation implements Serializable {
 
     
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +41,7 @@ public class RentalReservation implements Serializable {
     private Boolean rentalReservationIsPaid;
     @Column(nullable = false)
     private Boolean rentalReservationIsCancelled;
-    @Column(nullable = false, precision = 20, scale = 2)
+    @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
     @Digits(integer = 9, fraction = 2)
@@ -71,36 +71,37 @@ public class RentalReservation implements Serializable {
     @NotNull
     private Date rentalReservationReturnDate;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Car reservedCar;
-//    
-//    @ManyToMany
-//    private List<RentalRate> rentalRates;
-//    
-//    @OneToOne(mappedBy = "rentalReservation")
-//    private TransitDriverDispatchRecord transitDriverDispatchRecord;
-//    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Customer customer;
-//    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Outlet pickUpOutlet;
-//    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Outlet returnOutlet;
-//    
-//    @OneToOne
-//    private CarPickup carPickupRecord;
-//    
-//    @OneToOne
-//    private CarReturn carReturnRecord;
-
+    
+    @OneToOne(optional = true)
+    private Car car;
+    
+    @ManyToMany
+    private List<RentalRate> rentalRates;
+    
+    @OneToOne(optional = true, mappedBy = "rentalReservation")
+    private TransitDriverDispatchRecord transitDriverDispatchRecord;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Customer customer;
+    
+    @OneToOne(optional = false)
+    private Outlet pickUpOutlet;
+    
+    @OneToOne(optional = false)
+    private Outlet returnOutlet;
+    
+    @OneToOne(optional = false)
+    private CarPickup carPickupRecord;
+    
+    @OneToOne(optional = false)
+    private CarReturn carReturnRecord;
+    
+    
     
     public RentalReservation() {
+        rentalReservationIsCancelled = false;
+        rentalRates = new ArrayList<>();
     }
 
     public RentalReservation(Boolean reservationIsPaid, Boolean reservationIsCancelled, BigDecimal reservationAmount, String creditCardName, String creditCardNumber, String creditCardCVV, Date creditCardExpiry, Date reservationPickupDate, Date reservationReturnDate) {
@@ -115,8 +116,6 @@ public class RentalReservation implements Serializable {
         this.rentalReservationPickupDate = reservationPickupDate;
         this.rentalReservationReturnDate = reservationReturnDate;
     }
-    
-    
 
     public Long getRentalReservationId() {
         return rentalReservationId;
