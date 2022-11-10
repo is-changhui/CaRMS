@@ -5,15 +5,11 @@
  */
 package carmsmanagementclient;
 
-import ejb.session.stateless.CarCategorySessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
-import entity.CarCategory;
 import entity.Employee;
 import java.util.Scanner;
-import util.exception.CarCategoryExistException;
-import util.exception.InputDataValidationException;
+import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
-import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -21,17 +17,18 @@ import util.exception.UnknownPersistenceException;
  */
 public class MainApp {
     
-    private CarCategorySessionBeanRemote carCategorySessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+    
     private Employee currentEmployeeEntity;
+    
+    private CustomerServiceModule customerServiceModule;
+    private SalesManagementModule salesManagementModule;
 
     
     public MainApp() {
     }
 
-    public MainApp(CarCategorySessionBeanRemote carCategorySessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
-        this();
-        this.carCategorySessionBeanRemote = carCategorySessionBeanRemote;
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
     }
     
@@ -51,13 +48,16 @@ public class MainApp {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if(response == 1) {
-                    System.out.println("Login successful!\n");
-//                    try {
-//                        doLogin();
-//                        System.out.println("Login successful!\n");
-//                    } catch (InvalidLoginCredentialException ex) {
-//                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
-//                    }
+                    
+                    try {
+                        doLogin();
+                        System.out.println("Login successful!\n");
+                        customerServiceModule = new CustomerServiceModule(employeeSessionBeanRemote, currentEmployeeEntity);
+                        salesManagementModule = new SalesManagementModule(employeeSessionBeanRemote, currentEmployeeEntity);
+                        menuMain();
+                    } catch (InvalidLoginCredentialException ex) {
+                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
+                    }
                 } else if (response == 2) {
                     break;
                 } else {
@@ -88,6 +88,56 @@ public class MainApp {
             throw new InvalidLoginCredentialException("Missing login credentials!");
         }
     }
+     
+     private void menuMain() {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+        
+        while(true) {
+            System.out.println("*** CaRMS Management Client ***\n");
+            System.out.println("You are login as " + currentEmployeeEntity.getEmployeeName() + " with " + currentEmployeeEntity.getEmployeeAccessRight().toString() + " rights\n");
+            System.out.println("1: Sales Management");
+            System.out.println("2: Customer Service");
+            System.out.println("3: Logout\n");
+            response = 0;
+            
+            while(response < 1 || response > 3)
+            {
+                System.out.print("> ");
+
+                response = scanner.nextInt();
+
+                if(response == 1)
+                {
+//                    salesManagementModule.menuSalesManagement();
+                }
+                else if(response == 2)
+                {
+                    try
+                    {
+                        customerServiceModule.menuCustomerService();
+                    }
+                    catch (InvalidAccessRightException ex)
+                    {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
+                }
+                else if (response == 3)
+                {
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid option, please try again!\n");                
+                }
+            }
+            
+            if(response == 3)
+            {
+                break;
+            }
+        }
+     }
      
 //    private void doCreateNewCarCategory() {
 //        Scanner scanner = new Scanner(System.in);

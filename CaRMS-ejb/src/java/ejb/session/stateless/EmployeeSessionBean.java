@@ -24,6 +24,7 @@ import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateEmployeeException;
 
 /**
  *
@@ -129,36 +130,37 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     
     
     
-//    @Override
-//    public void updateEmployee(Employee employee) throws EmployeeNotFoundException, UpdateEmployeeException, InputDataValidationException
-//    {
-//        if(employee != null && employee.getEmployeeId() != null)
-//        {
-//            Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(employee);
-//        
-//            if(constraintViolations.isEmpty())
-//            {
-//                Employee employeeEntityToUpdate = retrieveEmployeeByEmployeeId(employee.getEmployeeId());
-//
-//                if(employeeEntityToUpdate.getEmployeeUsername().equals(employee.getEmployeeUsername()))
-//                {
-//                    employeeEntityToUpdate.setEmployeeAccessRight(employee.getEmployeeAccessRight());
-//                }
-//                else
-//                {
-//                    throw new UpdateEmployeeException("Username of employee record to be updated does not match the existing record");
-//                }
-//            }
-//            else
-//            {
-//                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
-//            }
-//        }
-//        else
-//        {
-//            throw new EmployeeNotFoundException("Employee ID not provided for employee to be updated");
-//        }
-//    }
+    @Override
+    public void updateEmployee(Employee employee) throws EmployeeNotFoundException, UpdateEmployeeException, InputDataValidationException
+    {
+        if(employee != null && employee.getEmployeeId() != null)
+        {
+            Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(employee);
+        
+            if(constraintViolations.isEmpty())
+            {
+                Employee employeeEntityToUpdate = retrieveEmployeeByEmployeeId(employee.getEmployeeId());
+
+                if(employeeEntityToUpdate.getEmployeeUsername().equals(employee.getEmployeeUsername()))
+                {
+                    employeeEntityToUpdate.setEmployeeName(employee.getEmployeeName());
+                    employeeEntityToUpdate.setEmployeeAccessRight(employee.getEmployeeAccessRight());
+                }
+                else
+                {
+                    throw new UpdateEmployeeException("Username of employee record to be updated does not match the existing record");
+                }
+            }
+            else
+            {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        }
+        else
+        {
+            throw new EmployeeNotFoundException("Employee ID not provided for employee to be updated");
+        }
+    }
 
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Employee>>constraintViolations) {

@@ -5,10 +5,31 @@
  */
 package carmsmanagementclient;
 
+import ejb.session.stateless.EmployeeSessionBeanRemote;
+import entity.Employee;
+
 /**
  *
  * @author Darie
  */
 public class SalesManagementModule {
+    
+    private EmployeeSessionBeanRemote employeeSessionBeanRemote;
+
+    private Employee currentEmployeeEntity;
+    
+
+    public SalesManagementModule() {
+    }
+
+    public SalesManagementModule(EmployeeSessionBeanRemote employeeSessionBeanRemote, Employee currentEmployeeEntity) {
+        this();
+        this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+        this.currentEmployeeEntity = currentEmployeeEntity;
+    }
+    
+    
+    
+    
     
 }

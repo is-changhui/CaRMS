@@ -13,6 +13,7 @@ import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateEmployeeException;
 
 /**
  *
@@ -30,5 +31,7 @@ public interface EmployeeSessionBeanLocal {
     public Employee retrieveEmployeeByUsername(String username) throws EmployeeNotFoundException;
 
     public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public void updateEmployee(Employee employee) throws EmployeeNotFoundException, UpdateEmployeeException, InputDataValidationException;
     
 }

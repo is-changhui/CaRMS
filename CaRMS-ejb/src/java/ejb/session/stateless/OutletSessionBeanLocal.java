@@ -12,6 +12,7 @@ import util.exception.InputDataValidationException;
 import util.exception.OutletExistException;
 import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateOutletException;
 
 /**
  *
@@ -25,5 +26,7 @@ public interface OutletSessionBeanLocal {
     public List<Outlet> retrieveAllOutlets();
 
     public Outlet retrieveOutletById(Long outletId) throws OutletNotFoundException;
+
+    public void updateOutlet(Outlet outlet) throws OutletNotFoundException, UpdateOutletException, InputDataValidationException;
     
 }

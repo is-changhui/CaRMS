@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Employee;
 import entity.Outlet;
 import java.util.List;
 import java.util.Set;
@@ -17,10 +18,13 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.EmployeeNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OutletExistException;
 import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateEmployeeException;
+import util.exception.UpdateOutletException;
 
 /**
  *
@@ -86,6 +90,40 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
             return outletEntity;
         } else {
             throw new OutletNotFoundException("Outlet ID " + outletId + " does not exist!");
+        }
+    }
+    
+    @Override
+    public void updateOutlet(Outlet outlet) throws OutletNotFoundException, UpdateOutletException, InputDataValidationException
+    {
+        if(outlet != null && outlet.getOutletId() != null)
+        {
+            Set<ConstraintViolation<Outlet>>constraintViolations = validator.validate(outlet);
+        
+            if(constraintViolations.isEmpty())
+            {
+                Outlet outletEntityToUpdate = retrieveOutletById(outlet.getOutletId());
+
+                if(outletEntityToUpdate.getOutletName().equals(outlet.getOutletName()))
+                {
+                    outletEntityToUpdate.setOutletName(outlet.getOutletName());
+                    outletEntityToUpdate.setOutletAddress(outlet.getOutletAddress());
+                    outletEntityToUpdate.setOutletOpeningHour(outlet.getOutletOpeningHour());
+                    outletEntityToUpdate.setOutletClosingHour(outlet.getOutletClosingHour());
+                }
+                else
+                {
+                    throw new UpdateOutletException("Name of outlet record to be updated does not match the existing record");
+                }
+            }
+            else
+            {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        }
+        else
+        {
+            throw new OutletNotFoundException("Outlet ID not provided for outlet to be updated");
         }
     }
     

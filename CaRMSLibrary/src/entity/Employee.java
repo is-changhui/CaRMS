@@ -6,7 +6,6 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import util.enumeration.EmployeeAccessRightEnum;
 
@@ -26,8 +24,6 @@ import util.enumeration.EmployeeAccessRightEnum;
  */
 @Entity
 public class Employee implements Serializable {
-
-    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -134,6 +130,20 @@ public class Employee implements Serializable {
     public void setEmployeeAccessRight(EmployeeAccessRightEnum employeeAccessRight) {
         this.employeeAccessRight = employeeAccessRight;
     }
+    
+    /**
+     * @return the outlet
+     */
+//    public Outlet getOutlet() {
+//        return outlet;
+//    }
+
+    /**
+     * @param outlet the outlet to set
+     */
+//    public void setOutlet(Outlet outlet) {
+//        this.outlet = outlet;
+//    }
 
     @Override
     public int hashCode() {

@@ -15,9 +15,7 @@ import javax.ejb.EJB;
  */
 public class Main {
 
-    
-    @EJB
-    private static CarCategorySessionBeanRemote carCategorySessionBeanRemote;
+
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
@@ -30,7 +28,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        MainApp mainApp = new MainApp(carCategorySessionBeanRemote, employeeSessionBeanRemote);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote);
         mainApp.runApp();
         
     }

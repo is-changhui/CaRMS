@@ -96,7 +96,7 @@ public class DataInitSessionBean {
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C1", "C1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C2", "C2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C3", "C3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-            partnerSessionBeanLocal.createNewPartner(new Partner("Holiday.com", "holidaymanager", "password"));
+            partnerSessionBeanLocal.createNewPartner(new Partner("Holiday.com", "holidaymanager", "password" ));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Standard Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Family Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Luxury Sedan"));
