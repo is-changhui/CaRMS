@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,16 +33,19 @@ public class CarCategory implements Serializable {
 //    @Size(min = 8, max = 32)
     private String categoryName;
     
-//    @OneToMany(mappedBy = "carCategory")
-//    private List<CarModel> carModel;
+    @OneToMany(mappedBy = "carCategory")
+    private List<CarModel> carModels;
 //    
     @OneToMany(mappedBy = "carCategory")
     private List<RentalRate> rentalRates;
     
     public CarCategory() {
+        carModels = new ArrayList<>();
+        rentalRates = new ArrayList<>();
     }
 
     public CarCategory(String categoryName) {
+        this();
         this.categoryName = categoryName;
     }
     
@@ -66,6 +70,34 @@ public class CarCategory implements Serializable {
      */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+    
+    /**
+     * @return the carModels
+     */
+    public List<CarModel> getCarModels() {
+        return carModels;
+    }
+
+    /**
+     * @param carModels the carModels to set
+     */
+    public void setCarModels(List<CarModel> carModels) {
+        this.carModels = carModels;
+    }
+
+    /**
+     * @return the rentalRates
+     */
+    public List<RentalRate> getRentalRates() {
+        return rentalRates;
+    }
+
+    /**
+     * @param rentalRates the rentalRates to set
+     */
+    public void setRentalRates(List<RentalRate> rentalRates) {
+        this.rentalRates = rentalRates;
     }
 
     @Override

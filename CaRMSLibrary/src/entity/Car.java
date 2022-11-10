@@ -59,15 +59,14 @@ public class Car implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CarModel carModel;
-//    
-    @ManyToOne(optional = true)
-    @JoinColumn(nullable = false)
-    private Outlet outlet;
-//    
+    
     @OneToOne(optional = true, mappedBy = "reservedCar")
     private RentalReservation rentalReservation;
     
-    
+    @ManyToOne(optional = true)
+    @JoinColumn(nullable = false)
+    private Outlet outlet;
+
     
     public Car() {
         carStatus = CarStatusEnum.AVAILABLE;
