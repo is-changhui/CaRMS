@@ -57,6 +57,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newEmployee);
+                em.flush();
                 return newEmployee.getEmployeeId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {

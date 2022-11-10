@@ -5,10 +5,15 @@
  */
 package carmsmanagementclient;
 
+import ejb.session.stateless.CarCategorySessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import entity.CarCategory;
 import entity.Employee;
 import java.util.Scanner;
+import util.exception.CarCategoryExistException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -16,6 +21,7 @@ import util.exception.InvalidLoginCredentialException;
  */
 public class MainApp {
     
+    private CarCategorySessionBeanRemote carCategorySessionBeanRemote;
     private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private Employee currentEmployeeEntity;
 
@@ -23,10 +29,12 @@ public class MainApp {
     public MainApp() {
     }
 
-    
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+    public MainApp(CarCategorySessionBeanRemote carCategorySessionBeanRemote, EmployeeSessionBeanRemote employeeSessionBeanRemote) {
+        this();
+        this.carCategorySessionBeanRemote = carCategorySessionBeanRemote;
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
     }
+    
     
 
     public void runApp() {
@@ -44,6 +52,7 @@ public class MainApp {
                 response = scanner.nextInt();
                 if(response == 1) {
                     System.out.println("Login successful!\n");
+                    doCreateNewCarCategory();
 //                    try {
 //                        doLogin();
 //                        System.out.println("Login successful!\n");
@@ -79,5 +88,42 @@ public class MainApp {
         } else {
             throw new InvalidLoginCredentialException("Missing login credentials!");
         }
-    }        
+    }
+     
+    private void doCreateNewCarCategory() {
+        Scanner scanner = new Scanner(System.in);
+        CarCategory newCarCategoryEntity = new CarCategory();
+        
+        System.out.println("*** CaRMS Management Client :: System Administration :: Create New Car Category ***\n");
+        System.out.print("Enter Car Category Name> ");
+        newCarCategoryEntity.setCategoryName(scanner.nextLine().trim());
+        
+        
+//        Set<ConstraintViolation<StaffEntity>>constraintViolations = validator.validate(newStaffEntity);
+//        
+//        if(constraintViolations.isEmpty())
+//        {
+            try
+            {
+                Long newCarCategoryId = carCategorySessionBeanRemote.createNewCarCategory(newCarCategoryEntity);
+                System.out.println("New car category created successfully!: " + newCarCategoryId + "\n");
+            }
+            catch(CarCategoryExistException ex)
+            {
+                System.out.println("An error has occurred while creating the new car category: The name already exist! \n");
+            }
+            catch(UnknownPersistenceException ex)
+            {
+                System.out.println("An unknown error has occurred while creating the new car category!: " + ex.getMessage() + "\n");
+            }
+            catch(InputDataValidationException ex)
+            {
+                System.out.println(ex.getMessage() + "\n");
+            }
+//        }
+//        else
+//        {
+//            showInputDataValidationErrorsForStaffEntity(constraintViolations);
+//        }
+    }
 }
