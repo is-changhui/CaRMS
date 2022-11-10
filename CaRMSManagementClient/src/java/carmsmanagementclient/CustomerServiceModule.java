@@ -29,56 +29,48 @@ public class CustomerServiceModule {
         this.currentEmployeeEntity = currentEmployeeEntity;
     }
     
-    public void menuCustomerService() throws InvalidAccessRightException
-    {
-        if(currentEmployeeEntity.getEmployeeAccessRight() != EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE)
-        {
+    public void menuCustomerService() throws InvalidAccessRightException {
+        if (currentEmployeeEntity.getEmployeeAccessRight() != EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE) {
             throw new InvalidAccessRightException("You don't have CUSTOMER SERVICE EXECUTIVE rights to access the customer service module.");
         }
         
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
-        while(true)
-        {
+        while (true) {
             System.out.println("*** CaRMS :: Customer Service ***\n");
             System.out.println("1: Pickup Car");
             System.out.println("2: Return Car");
             System.out.println("3: Back\n");
             response = 0;
             
-            while(response < 1 || response > 3)
-            {
+            while (response < 1 || response > 3) {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
 
-                if(response == 1)
-                {
+                if (response == 1) {
                     doPickupCar();
-                }
-                else if(response == 2)
-                {
-//                    doReturnCar();
-                }
-                else if(response == 3)
-                {
+                } else if(response == 2) {
+                    doReturnCar();
+                } else if(response == 3) {
                     break;
-                }
-                else
-                {
+                } else {
                     System.out.println("Invalid option, please try again!\n");                
                 }
             }
             
-            if(response == 3)
-            {
+            if (response == 3) {
                 break;
             }
         }
     }
     
     private void doPickupCar() {
+        System.out.println("Work in Progress...");
+    }
+    
+    private void doReturnCar() {
         System.out.println("Work in Progress...");
     }
     

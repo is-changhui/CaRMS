@@ -44,10 +44,10 @@ public class MainApp {
             System.out.println("2: Exit\n");
             response = 0;
             
-            while(response < 1 || response > 2) {
+            while (response < 1 || response > 2) {
                 System.out.print("> ");
                 response = scanner.nextInt();
-                if(response == 1) {
+                if (response == 1) {
                     
                     try {
                         doLogin();
@@ -71,7 +71,7 @@ public class MainApp {
     }
     
     
-     private void doLogin() throws InvalidLoginCredentialException {
+    private void doLogin() throws InvalidLoginCredentialException {
         Scanner scanner = new Scanner(System.in);
         String username = "";
         String password = "";
@@ -82,18 +82,19 @@ public class MainApp {
         System.out.print("Enter password> ");
         password = scanner.nextLine().trim();
         
-        if(username.length() > 0 && password.length() > 0) {
+        if (username.length() > 0 && password.length() > 0) {
             currentEmployeeEntity = employeeSessionBeanRemote.employeeLogin(username, password);      
         } else {
             throw new InvalidLoginCredentialException("Missing login credentials!");
         }
     }
      
-     private void menuMain() {
+     
+    private void menuMain() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
-        while(true) {
+        while (true) {
             System.out.println("*** CaRMS Management Client ***\n");
             System.out.println("You are login as " + currentEmployeeEntity.getEmployeeName() + " with " + currentEmployeeEntity.getEmployeeAccessRight().toString() + " rights\n");
             System.out.println("1: Sales Management");
@@ -101,38 +102,28 @@ public class MainApp {
             System.out.println("3: Logout\n");
             response = 0;
             
-            while(response < 1 || response > 3)
-            {
+            while (response < 1 || response > 3) {
                 System.out.print("> ");
-
                 response = scanner.nextInt();
-
-                if(response == 1)
-                {
-//                    salesManagementModule.menuSalesManagement();
-                }
-                else if(response == 2)
-                {
-                    try
-                    {
-                        customerServiceModule.menuCustomerService();
-                    }
-                    catch (InvalidAccessRightException ex)
-                    {
+                if (response == 1) {
+                    try {
+                        salesManagementModule.menuSalesManagement();
+                    } catch (InvalidAccessRightException ex) {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
-                }
-                else if (response == 3)
-                {
+                } else if (response == 2) {
+                    try {
+                        customerServiceModule.menuCustomerService();
+                    } catch (InvalidAccessRightException ex) {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
+                } else if (response == 3) {
                     break;
-                }
-                else
-                {
+                } else {
                     System.out.println("Invalid option, please try again!\n");                
                 }
             }
-            
-            if(response == 3)
+            if (response == 3)
             {
                 break;
             }
