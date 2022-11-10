@@ -16,7 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import util.enumeration.CarStatusEnum;
 
@@ -26,6 +26,8 @@ import util.enumeration.CarStatusEnum;
  */
 @Entity
 public class Car implements Serializable {
+
+    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,40 +46,40 @@ public class Car implements Serializable {
 //    private Boolean carIsUsed;
     @Column(nullable = false)
     @NotNull
-    private Boolean carIsDisabled;
+    private Boolean carIsEnabled;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
     private CarStatusEnum carStatus;
-    @Column(nullable = false, length = 32)
-    @NotNull
-//    @Size(min = 1, max = 32)
-    private String carLocation;
+//    @Column(nullable = false, length = 32)
+//    @NotNull
+////    @Size(min = 1, max = 32)
+//    private String carLocation;
     
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private CarModel carModel;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private CarModel carModel;
 //    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private Outlet outlet;
+    @ManyToOne(optional = true)
+    @JoinColumn(nullable = false)
+    private Outlet outlet;
 //    
-//    @OneToMany(mappedBy = "reservedCar")
-//    private List<RentalReservation> rentalReservations;
+    @OneToOne(optional = true, mappedBy = "reservedCar")
+    private RentalReservation rentalReservation;
     
     
     
     public Car() {
-        carIsDisabled = false;
+        carStatus = CarStatusEnum.AVAILABLE;
+        carIsEnabled = true;
     }
 
-    public Car(String carLicensePlate, String carColour, Boolean carIsDisabled, CarStatusEnum carStatus, String carLocation) {
+    public Car(String carLicensePlate, String carColour, Boolean carIsEnabled, CarStatusEnum carStatus) {
         this();
         this.carLicensePlate = carLicensePlate;
         this.carColour = carColour;
-        this.carIsDisabled = carIsDisabled;
+        this.carIsEnabled = carIsEnabled;
         this.carStatus = carStatus;
-        this.carLocation = carLocation;
     }
     
     
@@ -116,14 +118,14 @@ public class Car implements Serializable {
      * @return the carIsUsed
      */
     public Boolean getCarIsUsed() {
-        return carIsDisabled;
+        return carIsEnabled;
     }
 
     /**
      * @param carIsUsed the carIsUsed to set
      */
     public void setCarIsUsed(Boolean carIsUsed) {
-        this.carIsDisabled = carIsUsed;
+        this.carIsEnabled = carIsUsed;
     }
 
     /**
@@ -143,17 +145,58 @@ public class Car implements Serializable {
     /**
      * @return the carLocation
      */
-    public String getCarLocation() {
-        return carLocation;
-    }
+//    public String getCarLocation() {
+//        return carLocation;
+//    }
 
     /**
      * @param carLocation the carLocation to set
      */
-    public void setCarLocation(String carLocation) {
-        this.carLocation = carLocation;
-    }
+//    public void setCarLocation(String carLocation) {
+//        this.carLocation = carLocation;
+//    }
     
+    /**
+     * @return the carModel
+     */
+    public CarModel getCarModel() {
+        return carModel;
+    }
+
+    /**
+     * @param carModel the carModel to set
+     */
+    public void setCarModel(CarModel carModel) {
+        this.carModel = carModel;
+    }
+
+    /**
+     * @return the outlet
+     */
+    public Outlet getOutlet() {
+        return outlet;
+    }
+
+    /**
+     * @param outlet the outlet to set
+     */
+    public void setOutlet(Outlet outlet) {
+        this.outlet = outlet;
+    }
+
+    /**
+     * @return the rentalReservation
+     */
+    public RentalReservation getRentalReservation() {
+        return rentalReservation;
+    }
+
+    /**
+     * @param rentalReservation the rentalReservation to set
+     */
+    public void setRentalReservation(RentalReservation rentalReservation) {
+        this.rentalReservation = rentalReservation;
+    }
     
 
     @Override
@@ -181,12 +224,12 @@ public class Car implements Serializable {
         return "entity.Car[ id=" + carId + " ]";
     }
 
-    public Boolean getCarIsDisabled() {
-        return carIsDisabled;
+    public Boolean getCarIsEnabled() {
+        return carIsEnabled;
     }
 
-    public void setCarIsDisabled(Boolean carIsDisabled) {
-        this.carIsDisabled = carIsDisabled;
+    public void setCarIsEnabled(Boolean carIsEnabled) {
+        this.carIsEnabled = carIsEnabled;
     }
     
 }
