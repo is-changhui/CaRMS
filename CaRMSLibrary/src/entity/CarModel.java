@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,6 @@ import javax.validation.constraints.NotNull;
 public class CarModel implements Serializable {
 
 
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,25 +40,27 @@ public class CarModel implements Serializable {
     private String modelName;
     @Column(nullable = false)
     @NotNull
-    private boolean modelIsDisabled;
-    
-//    @OneToMany
-//    private List<Car> cars;
-//    
-//    @ManyToOne(optional = false)
-//    @JoinColumn(nullable = false)
-//    private CarCategory carCategory;
+    private boolean modelIsEnabled;
     
     
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private CarCategory carCategory;
+    
+    @OneToMany(mappedBy = "carModel")
+    private List<Car> cars;
 
+    
     public CarModel() {
-        modelIsDisabled = false;
+        modelIsEnabled = true;
+        cars = new ArrayList<>();
     }
 
     public CarModel(String carMake, String modelName, boolean modelIsDisabled) {
+        this();
         this.carMake = carMake;
         this.modelName = modelName;
-        this.modelIsDisabled = modelIsDisabled;
+        this.modelIsEnabled = modelIsDisabled;
     }
     
 
@@ -99,19 +101,46 @@ public class CarModel implements Serializable {
     }
 
     /**
-     * @return the modelIsDisabled
+     * @return the modelIsEnabled
      */
-    public boolean isModelIsDisabled() {
-        return modelIsDisabled;
+    public boolean isModelIsEnabled() {
+        return modelIsEnabled;
     }
 
     /**
-     * @param modelIsDisabled the modelIsDisabled to set
+     * @param modelIsEnabled the modelIsEnabled to set
      */
-    public void setModelIsDisabled(boolean modelIsDisabled) {
-        this.modelIsDisabled = modelIsDisabled;
+    public void setModelIsEnabled(boolean modelIsEnabled) {
+        this.modelIsEnabled = modelIsEnabled;
     }
     
+    /**
+     * @return the carCategory
+     */
+    public CarCategory getCarCategory() {
+        return carCategory;
+    }
+
+    /**
+     * @param carCategory the carCategory to set
+     */
+    public void setCarCategory(CarCategory carCategory) {
+        this.carCategory = carCategory;
+    }
+
+    /**
+     * @return the cars
+     */
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    /**
+     * @param cars the cars to set
+     */
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
 
     @Override
     public int hashCode() {
