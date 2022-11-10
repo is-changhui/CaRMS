@@ -54,7 +54,7 @@ public class DataInitSessionBean {
     public void postConstruct() {
         try {
             employeeSessionBeanLocal.retrieveEmployeeByEmployeeId(1l);
-            carCategorySessionBeanLocal.retrieveCarCategoryByCarCategoryId(1l);
+            carCategorySessionBeanLocal.retrieveCarCategoryById(1l);
         } catch(EmployeeNotFoundException | CarCategoryNotFoundException ex) {
             loadTestData();
         }

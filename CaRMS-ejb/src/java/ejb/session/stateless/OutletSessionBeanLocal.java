@@ -5,7 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.Outlet;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.InputDataValidationException;
+import util.exception.OutletExistException;
+import util.exception.OutletNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +19,11 @@ import javax.ejb.Local;
  */
 @Local
 public interface OutletSessionBeanLocal {
+
+    public Long createNewOutlet(Outlet newOutlet) throws OutletExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<Outlet> retrieveAllOutlets();
+
+    public Outlet retrieveOutletById(Long outletId) throws OutletNotFoundException;
     
 }

@@ -38,6 +38,7 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
+    
     public CarCategorySessionBean() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
@@ -79,7 +80,7 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
     
     
     @Override
-    public CarCategory retrieveCarCategoryByCarCategoryId(Long carCategoryId) throws CarCategoryNotFoundException {
+    public CarCategory retrieveCarCategoryById(Long carCategoryId) throws CarCategoryNotFoundException {
         CarCategory carCategoryEntity = em.find(CarCategory.class, carCategoryId);
         
         if (carCategoryEntity != null) {

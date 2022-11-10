@@ -24,6 +24,6 @@ public interface CarCategorySessionBeanRemote {
 
     public List<CarCategory> retrieveAllCarCategories();
 
-    public CarCategory retrieveCarCategoryByCarCategoryId(Long carCategoryId) throws CarCategoryNotFoundException;
+    public CarCategory retrieveCarCategoryById(Long carCategoryId) throws CarCategoryNotFoundException;
     
 }

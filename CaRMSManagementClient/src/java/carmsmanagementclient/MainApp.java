@@ -52,7 +52,6 @@ public class MainApp {
                 response = scanner.nextInt();
                 if(response == 1) {
                     System.out.println("Login successful!\n");
-                    doCreateNewCarCategory();
 //                    try {
 //                        doLogin();
 //                        System.out.println("Login successful!\n");
@@ -90,40 +89,40 @@ public class MainApp {
         }
     }
      
-    private void doCreateNewCarCategory() {
-        Scanner scanner = new Scanner(System.in);
-        CarCategory newCarCategoryEntity = new CarCategory();
-        
-        System.out.println("*** CaRMS Management Client :: System Administration :: Create New Car Category ***\n");
-        System.out.print("Enter Car Category Name> ");
-        newCarCategoryEntity.setCategoryName(scanner.nextLine().trim());
-        
-        
-//        Set<ConstraintViolation<StaffEntity>>constraintViolations = validator.validate(newStaffEntity);
+//    private void doCreateNewCarCategory() {
+//        Scanner scanner = new Scanner(System.in);
+//        CarCategory newCarCategoryEntity = new CarCategory();
 //        
-//        if(constraintViolations.isEmpty())
-//        {
-            try
-            {
-                Long newCarCategoryId = carCategorySessionBeanRemote.createNewCarCategory(newCarCategoryEntity);
-                System.out.println("New car category created successfully!: " + newCarCategoryId + "\n");
-            }
-            catch(CarCategoryExistException ex)
-            {
-                System.out.println("An error has occurred while creating the new car category: The name already exist! \n");
-            }
-            catch(UnknownPersistenceException ex)
-            {
-                System.out.println("An unknown error has occurred while creating the new car category!: " + ex.getMessage() + "\n");
-            }
-            catch(InputDataValidationException ex)
-            {
-                System.out.println(ex.getMessage() + "\n");
-            }
-//        }
-//        else
-//        {
-//            showInputDataValidationErrorsForStaffEntity(constraintViolations);
-//        }
-    }
+//        System.out.println("*** CaRMS Management Client :: System Administration :: Create New Car Category ***\n");
+//        System.out.print("Enter Car Category Name> ");
+//        newCarCategoryEntity.setCategoryName(scanner.nextLine().trim());
+//        
+//        
+////        Set<ConstraintViolation<StaffEntity>>constraintViolations = validator.validate(newStaffEntity);
+////        
+////        if(constraintViolations.isEmpty())
+////        {
+//            try
+//            {
+//                Long newCarCategoryId = carCategorySessionBeanRemote.createNewCarCategory(newCarCategoryEntity);
+//                System.out.println("New car category created successfully!: " + newCarCategoryId + "\n");
+//            }
+//            catch(CarCategoryExistException ex)
+//            {
+//                System.out.println("An error has occurred while creating the new car category: The name already exist! \n");
+//            }
+//            catch(UnknownPersistenceException ex)
+//            {
+//                System.out.println("An unknown error has occurred while creating the new car category!: " + ex.getMessage() + "\n");
+//            }
+//            catch(InputDataValidationException ex)
+//            {
+//                System.out.println(ex.getMessage() + "\n");
+//            }
+////        }
+////        else
+////        {
+////            showInputDataValidationErrorsForStaffEntity(constraintViolations);
+////        }
+//    }
 }
