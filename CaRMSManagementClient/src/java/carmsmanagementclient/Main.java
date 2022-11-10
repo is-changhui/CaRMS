@@ -15,6 +15,7 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+    
     @EJB
     private static CarCategorySessionBeanRemote carCategorySessionBeanRemote;
 

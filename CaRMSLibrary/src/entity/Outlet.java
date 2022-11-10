@@ -6,14 +6,12 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -38,14 +36,14 @@ public class Outlet implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String outletAddress;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    @NotNull
-    private Date outletOpeningHour;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    @NotNull
-    private Date outletClosingHour;
+    @Column(nullable = true, length = 32)
+//    @NotNull
+//    @Size(min = 8, max = 32)
+    private String outletOpeningHour;
+//    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true, length = 32)
+//    @NotNull
+    private String outletClosingHour;
     
 //    @OneToMany(mappedBy = "outlet")
 //    private List<Car> cars;
@@ -67,7 +65,7 @@ public class Outlet implements Serializable {
     }
 
     
-    public Outlet(String outletName, String outletAddress, Date outletOpeningHour, Date outletClosingHour) {
+    public Outlet(String outletName, String outletAddress, String outletOpeningHour, String outletClosingHour) {
         this();
         this.outletName = outletName;
         this.outletAddress = outletAddress;
@@ -115,28 +113,28 @@ public class Outlet implements Serializable {
     /**
      * @return the outletOpeningHour
      */
-    public Date getOutletOpeningHour() {
+    public String getOutletOpeningHour() {
         return outletOpeningHour;
     }
 
     /**
      * @param outletOpeningHour the outletOpeningHour to set
      */
-    public void setOutletOpeningHour(Date outletOpeningHour) {
+    public void setOutletOpeningHour(String outletOpeningHour) {
         this.outletOpeningHour = outletOpeningHour;
     }
 
     /**
      * @return the outletClosingHour
      */
-    public Date getOutletClosingHour() {
+    public String getOutletClosingHour() {
         return outletClosingHour;
     }
 
     /**
      * @param outletClosingHour the outletClosingHour to set
      */
-    public void setOutletClosingHour(Date outletClosingHour) {
+    public void setOutletClosingHour(String outletClosingHour) {
         this.outletClosingHour = outletClosingHour;
     }
 

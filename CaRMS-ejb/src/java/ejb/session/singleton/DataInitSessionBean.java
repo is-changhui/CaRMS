@@ -7,8 +7,11 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.CarCategorySessionBeanLocal;
 import ejb.session.stateless.EmployeeSessionBeanLocal;
+import ejb.session.stateless.OutletSessionBeanLocal;
 import entity.CarCategory;
 import entity.Employee;
+import entity.Outlet;
+import java.time.LocalTime;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -20,6 +23,8 @@ import util.exception.CarCategoryNotFoundException;
 import util.exception.EmployeeNotFoundException;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.OutletExistException;
+import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -32,6 +37,9 @@ import util.exception.UnknownPersistenceException;
 public class DataInitSessionBean {
 
     @EJB
+    private OutletSessionBeanLocal outletSessionBeanLocal;
+
+    @EJB
     private CarCategorySessionBeanLocal carCategorySessionBeanLocal;
 
 //    @EJB
@@ -39,11 +47,7 @@ public class DataInitSessionBean {
 
     @EJB
     private EmployeeSessionBeanLocal employeeSessionBeanLocal;
-    
-    
 
-    
-    
 
     public DataInitSessionBean() {
         
@@ -53,9 +57,10 @@ public class DataInitSessionBean {
     @PostConstruct
     public void postConstruct() {
         try {
+            outletSessionBeanLocal.retrieveOutletById(1l);
             employeeSessionBeanLocal.retrieveEmployeeByEmployeeId(1l);
             carCategorySessionBeanLocal.retrieveCarCategoryById(1l);
-        } catch(EmployeeNotFoundException | CarCategoryNotFoundException ex) {
+        } catch(EmployeeNotFoundException | CarCategoryNotFoundException | OutletNotFoundException ex) {
             loadTestData();
         }
 //        try {
@@ -68,6 +73,9 @@ public class DataInitSessionBean {
     private void loadTestData() {
         
         try {
+            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A", "null", "null"));
+            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B", "null", "null"));
+            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", "10:00", "22:00"));
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A2", "A2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
             employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A3", "A3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
@@ -83,7 +91,7 @@ public class DataInitSessionBean {
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Family Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Luxury Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("SUV and Minivan"));
-        } catch (EmployeeUsernameExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
+        } catch (OutletExistException | EmployeeUsernameExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
             ex.printStackTrace();
         }
 //        try {
