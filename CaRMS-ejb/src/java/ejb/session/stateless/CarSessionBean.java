@@ -52,6 +52,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newCar);
+                em.flush();
                 return newCar.getCarId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {

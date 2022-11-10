@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class TransitDriverDispatchRecord implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +48,7 @@ public class TransitDriverDispatchRecord implements Serializable {
     private Outlet destinationOutlet;
     
     @ManyToOne(optional = true)
-    @JoinColumn(nullable = false)
+    private Employee transitDriver;
     
     @OneToOne
     @JoinColumn(nullable = false)
@@ -118,6 +119,62 @@ public class TransitDriverDispatchRecord implements Serializable {
      */
     public void setDispatchDuration(Long dispatchDuration) {
         this.dispatchDuration = dispatchDuration;
+    }
+    
+    /**
+     * @return the destinationOutlet
+     */
+    public Outlet getDestinationOutlet() {
+        return destinationOutlet;
+    }
+
+    /**
+     * @param destinationOutlet the destinationOutlet to set
+     */
+    public void setDestinationOutlet(Outlet destinationOutlet) {
+        this.destinationOutlet = destinationOutlet;
+    }
+
+    /**
+     * @return the transitDriver
+     */
+    public Employee getTransitDriver() {
+        return transitDriver;
+    }
+
+    /**
+     * @param transitDriver the transitDriver to set
+     */
+    public void setTransitDriver(Employee transitDriver) {
+        this.transitDriver = transitDriver;
+    }
+
+    /**
+     * @return the rentalReservation
+     */
+    public RentalReservation getRentalReservation() {
+        return rentalReservation;
+    }
+
+    /**
+     * @param rentalReservation the rentalReservation to set
+     */
+    public void setRentalReservation(RentalReservation rentalReservation) {
+        this.rentalReservation = rentalReservation;
+    }
+
+    /**
+     * @return the car
+     */
+    public Car getCar() {
+        return car;
+    }
+
+    /**
+     * @param car the car to set
+     */
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     @Override

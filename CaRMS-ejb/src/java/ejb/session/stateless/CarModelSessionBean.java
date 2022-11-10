@@ -33,6 +33,7 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
+    
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     // Add business logic below. (Right-click in editor and choose
@@ -50,6 +51,7 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newCarModel);
+                em.flush();
                 return newCarModel.getModelId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
