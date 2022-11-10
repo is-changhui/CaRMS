@@ -12,6 +12,7 @@ import util.exception.EmployeeNotFoundException;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateEmployeeException;
 
@@ -33,5 +34,8 @@ public interface EmployeeSessionBeanRemote {
     public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException;
     
     public void updateEmployee(Employee employee) throws EmployeeNotFoundException, UpdateEmployeeException, InputDataValidationException;
+    
+    public Long createNewEmployeeJoinOutlet(Employee newEmployee, Long outletId) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException, OutletNotFoundException;
+    
     
 }

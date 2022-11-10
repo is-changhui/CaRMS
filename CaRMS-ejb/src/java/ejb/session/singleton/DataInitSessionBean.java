@@ -85,52 +85,49 @@ public class DataInitSessionBean {
         } catch(EmployeeNotFoundException | CarCategoryNotFoundException | OutletNotFoundException | PartnerNotFoundException ex) {
             loadTestData();
         }
-//        try {
-//            carSessionBeanLocal.retrieveCarByCarId(1l);
-//        } catch(CarNotFoundException ex) {
-//            loadTestData();
-//        }
     }
     
     private void loadTestData() {
         
         try {
-//            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A", "null", "null"));
-//            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B", "null", "null"));
-//            outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", "10:00", "22:00"));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A2", "A2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A3", "A3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A4", "A4", "password", EmployeeAccessRightEnum.EMPLOYEE));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee A5", "A5", "password", EmployeeAccessRightEnum.EMPLOYEE));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee B1", "B1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee B2", "B2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee B3", "B3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C1", "C1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C2", "C2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C3", "C3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-            partnerSessionBeanLocal.createNewPartner(new Partner("Holiday.com", "holidaymanager", "password" ));
+            Long aId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A", null, null));
+            Long bId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B", null, null));
+            Long cId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", "10:00", "22:00"));
+         
+            Employee a1 = new Employee("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a1, aId);
+            Employee a2 = new Employee("Employee A2", "A2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a2, aId);
+            Employee a3 = new Employee("Employee A3", "A3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a3, aId);
+            Employee a4 = new Employee("Employee A4", "A4", "password", EmployeeAccessRightEnum.EMPLOYEE);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a4, aId);
+            Employee a5 = new Employee("Employee A5", "A5", "password", EmployeeAccessRightEnum.EMPLOYEE);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a5, aId);
+            
+            Employee b1 = new Employee("Employee B1", "B1", "password", EmployeeAccessRightEnum.SALES_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(b1, bId);
+            Employee b2 = new Employee("Employee B2", "B2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(b2, bId);
+            Employee b3 = new Employee("Employee B3", "B3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(b3, bId);
+            
+            Employee c1 = new Employee("Employee C1", "C1", "password", EmployeeAccessRightEnum.SALES_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(c1, cId);
+            Employee c2 = new Employee("Employee C2", "C2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(c1, cId);
+            Employee c3 = new Employee("Employee C3", "C3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE);
+            employeeSessionBeanLocal.createNewEmployeeJoinOutlet(c1, cId);
+            
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Standard Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Family Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("Luxury Sedan"));
             carCategorySessionBeanLocal.createNewCarCategory(new CarCategory("SUV and Minivan"));
-        } catch (EmployeeUsernameExistException | PartnerExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
+            
+            partnerSessionBeanLocal.createNewPartner(new Partner("Holiday.com", "holidaymanager", "password" ));
+            
+        } catch (OutletExistException | OutletNotFoundException | EmployeeUsernameExistException | PartnerExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
             ex.printStackTrace();
         }
-//        try {
-//            carSessionBeanLocal.createNewCar(new Car("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee A2", "A2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee A3", "A3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee A4", "A4", "password", EmployeeAccessRightEnum.EMPLOYEE));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee A5", "A5", "password", EmployeeAccessRightEnum.EMPLOYEE));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee B1", "B1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-//            carSessionBeanLocal.createNewEmployee(new Employee("Employee B2", "B2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-//            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee B3", "B3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-//            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C1", "C1", "password", EmployeeAccessRightEnum.SALES_MANAGER));
-//            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C2", "C2", "password", EmployeeAccessRightEnum.OPERATIONS_MANAGER));
-//            employeeSessionBeanLocal.createNewEmployee(new Employee("Employee C3", "C3", "password", EmployeeAccessRightEnum.CUSTOMER_SERVICE_EXECUTIVE));
-//        } catch (EmployeeUsernameExistException | UnknownPersistenceException | InputDataValidationException ex) {
-//            ex.printStackTrace();
-//        }
     }
 }

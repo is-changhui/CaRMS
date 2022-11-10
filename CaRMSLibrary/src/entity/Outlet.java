@@ -43,12 +43,12 @@ public class Outlet implements Serializable {
     @Column(nullable = true, length = 32)
 //    @NotNull
 //    @Size(min = 8, max = 32)
-    private Date outletOpeningHour;
+    private String outletOpeningHour;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, length = 32)
 //    @NotNull
 //    @Size(min = 8, max = 32)
-    private Date outletClosingHour;
+    private String outletClosingHour;
     
     
     @OneToMany(mappedBy = "outlet")
@@ -75,8 +75,7 @@ public class Outlet implements Serializable {
         carReturnRecords = new ArrayList<>();
     }
 
-    
-    public Outlet(String outletName, String outletAddress, Date outletOpeningHour, Date outletClosingHour) {
+    public Outlet(String outletName, String outletAddress, String outletOpeningHour, String outletClosingHour) {
         this();
         this.outletName = outletName;
         this.outletAddress = outletAddress;
@@ -84,7 +83,6 @@ public class Outlet implements Serializable {
         this.outletClosingHour = outletClosingHour;
     }
     
-
     public Long getOutletId() {
         return outletId;
     }
@@ -121,33 +119,6 @@ public class Outlet implements Serializable {
         this.outletAddress = outletAddress;
     }
     
-    /**
-     * @return the outletOpeningHour
-     */
-    public Date getOutletOpeningHour() {
-        return outletOpeningHour;
-    }
-
-    /**
-     * @param outletOpeningHour the outletOpeningHour to set
-     */
-    public void setOutletOpeningHour(Date outletOpeningHour) {
-        this.outletOpeningHour = outletOpeningHour;
-    }
-
-    /**
-     * @return the outletClosingHour
-     */
-    public Date getOutletClosingHour() {
-        return outletClosingHour;
-    }
-
-    /**
-     * @param outletClosingHour the outletClosingHour to set
-     */
-    public void setOutletClosingHour(Date outletClosingHour) {
-        this.outletClosingHour = outletClosingHour;
-    }
     
     /**
      * @return the employees
@@ -217,6 +188,34 @@ public class Outlet implements Serializable {
      */
     public void setCarReturnRecords(List<CarReturn> carReturnRecords) {
         this.carReturnRecords = carReturnRecords;
+    }
+    
+    /**
+     * @return the outletOpeningHour
+     */
+    public String getOutletOpeningHour() {
+        return outletOpeningHour;
+    }
+
+    /**
+     * @param outletOpeningHour the outletOpeningHour to set
+     */
+    public void setOutletOpeningHour(String outletOpeningHour) {
+        this.outletOpeningHour = outletOpeningHour;
+    }
+
+    /**
+     * @return the outletClosingHour
+     */
+    public String getOutletClosingHour() {
+        return outletClosingHour;
+    }
+
+    /**
+     * @param outletClosingHour the outletClosingHour to set
+     */
+    public void setOutletClosingHour(String outletClosingHour) {
+        this.outletClosingHour = outletClosingHour;
     }
     
     @Override

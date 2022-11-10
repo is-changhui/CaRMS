@@ -6,8 +6,10 @@
 package ejb.session.stateless;
 
 import entity.Employee;
+import entity.Outlet;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -23,6 +25,7 @@ import util.exception.EmployeeNotFoundException;
 import util.exception.EmployeeUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateEmployeeException;
 
@@ -32,6 +35,9 @@ import util.exception.UpdateEmployeeException;
  */
 @Stateless
 public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeSessionBeanLocal {
+
+    @EJB
+    private OutletSessionBeanLocal outletSessionBeanLocal;
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
@@ -76,8 +82,42 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
         }
     }
     
+    // MCUC2: For use in DataInitSessionBean
+    // When employee created, has to be associated with outlet already and need to persist to em in one go, so logic should be here and DataInit just call this method
+    @Override
+    public Long createNewEmployeeJoinOutlet(Employee newEmployee, Long outletId) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException, OutletNotFoundException {
+        try {
+            Set<ConstraintViolation<Employee>>constraintViolations = validator.validate(newEmployee);
+            
+            if (constraintViolations.isEmpty()) {
+                try {
+                    Outlet outlet = outletSessionBeanLocal.retrieveOutletById(outletId);
+                    // outlet (1) ---- employee (1..*)
+                    outlet.getEmployees().add(newEmployee);
+                    newEmployee.setOutlet(outlet);
+                    em.persist(newEmployee);
+                    em.flush();
+                    return newEmployee.getEmployeeId();
+                } catch (PersistenceException ex) {
+                    if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
+                        if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
+                            throw new EmployeeUsernameExistException();
+                        } else {
+                            throw new UnknownPersistenceException(ex.getMessage());
+                        }
+                    } else {
+                        throw new UnknownPersistenceException(ex.getMessage());
+                    }
+                }
+            } else {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        } catch (OutletNotFoundException ex) {
+            throw new OutletNotFoundException("Outlet ID " + outletId + " does not exist!");
+        }   
+    }
     
-    
+
     @Override
     public List<Employee> retrieveAllEmployees() {
         Query query = em.createQuery("SELECT e FROM Employee e");

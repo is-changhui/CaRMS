@@ -47,8 +47,8 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     
-    // UC9.1: Create a new car rental rate record for a particular car category. 
-    // UC9.2: Basic attributes should include name, car category, rate per day (i.e., 24 hour period), validity period (if applicable).
+    // MCUC9.1: Create a new car rental rate record for a particular car category. 
+    // MCUC9.2: Basic attributes should include name, car category, rate per day (i.e., 24 hour period), validity period (if applicable).
     @Override
     public Long createNewRentalRate(RentalRate newRentalRate) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException { 
         
@@ -76,7 +76,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     
-    // UC10.1: Display a list of all car rental rate records in the system.
+    // MCUC10.1: Display a list of all car rental rate records in the system.
     @Override
     public List<RentalRate> retrieveAllRentalRates() {
         
@@ -87,7 +87,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     
     
     
-    // UC11: View the details of a particular car rental rate record.
+    // MCUC11: View the details of a particular car rental rate record.
     @Override
     public RentalRate retrieveRentalRateById(Long rentalRateId) throws RentalRateRecordNotFoundException {
         
@@ -115,7 +115,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     
-    // UC12: Update the details of a particular car rental rate record. 
+    // MCUC12: Update the details of a particular car rental rate record. 
     @Override
     public void updateRentalRate(RentalRate rentalRate) throws UpdateRentalRateRecordException, RentalRateRecordNotFoundException {
         
@@ -139,7 +139,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     }
     
     
-    // UC13
+    // MCUC13
     @Override
     public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException {
         
