@@ -50,7 +50,7 @@ public class DataInitSessionBean {
         } catch(EmployeeNotFoundException ex) {
             loadTestData();
         }
-                try {
+        try {
             carSessionBeanLocal.retrieveCarByCarId(1l);
         } catch(CarNotFoundException ex) {
             loadTestData();
