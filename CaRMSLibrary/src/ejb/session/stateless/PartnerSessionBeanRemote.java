@@ -5,7 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.Partner;
+import java.util.List;
 import javax.ejb.Remote;
+import util.exception.InputDataValidationException;
+import util.exception.PartnerExistException;
+import util.exception.PartnerNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -13,5 +19,11 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface PartnerSessionBeanRemote {
+    
+    public Long createNewPartner(Partner newPartner) throws PartnerExistException, UnknownPersistenceException, InputDataValidationException;
+
+    public List<Partner> retrieveAllPartners();
+
+    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
     
 }
