@@ -27,7 +27,6 @@ import util.enumeration.CarStatusEnum;
 @Entity
 public class Car implements Serializable {
 
-    
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -63,6 +62,8 @@ public class Car implements Serializable {
     @OneToOne(optional = true, mappedBy = "car")
     private RentalReservation rentalReservation;
     
+    // To address location of car: if outlet is not null, it is at outlet, else
+    // based on carStatusEnum, we will know if its with customer or outlet
     @ManyToOne(optional = true)
     @JoinColumn(nullable = false)
     private Outlet outlet;
@@ -117,14 +118,14 @@ public class Car implements Serializable {
      * @return the carIsUsed
      */
     public Boolean getCarIsUsed() {
-        return carIsEnabled;
+        return getCarIsEnabled();
     }
 
     /**
      * @param carIsUsed the carIsUsed to set
      */
     public void setCarIsUsed(Boolean carIsUsed) {
-        this.carIsEnabled = carIsUsed;
+        this.setCarIsEnabled(carIsUsed);
     }
 
     /**
@@ -140,20 +141,15 @@ public class Car implements Serializable {
     public void setCarStatus(CarStatusEnum carStatus) {
         this.carStatus = carStatus;
     }
+    
+    public Boolean getCarIsEnabled() {
+        return carIsEnabled;
+    }
 
-    /**
-     * @return the carLocation
-     */
-//    public String getCarLocation() {
-//        return carLocation;
-//    }
+    public void setCarIsEnabled(Boolean carIsEnabled) {
+        this.setCarIsEnabled(carIsEnabled);
+    }
 
-    /**
-     * @param carLocation the carLocation to set
-     */
-//    public void setCarLocation(String carLocation) {
-//        this.carLocation = carLocation;
-//    }
     
     /**
      * @return the carModel
@@ -221,14 +217,6 @@ public class Car implements Serializable {
     @Override
     public String toString() {
         return "entity.Car[ id=" + carId + " ]";
-    }
-
-    public Boolean getCarIsEnabled() {
-        return carIsEnabled;
-    }
-
-    public void setCarIsEnabled(Boolean carIsEnabled) {
-        this.carIsEnabled = carIsEnabled;
     }
     
 }

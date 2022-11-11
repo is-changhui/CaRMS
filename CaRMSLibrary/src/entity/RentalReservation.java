@@ -81,6 +81,9 @@ public class RentalReservation implements Serializable {
     @OneToOne(optional = true, mappedBy = "rentalReservation")
     private TransitDriverDispatchRecord transitDriverDispatchRecord;
     
+    @ManyToOne(optional = true)
+    private Partner partner;
+    
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Customer customer;

@@ -9,8 +9,11 @@ import entity.Car;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.CarExistException;
+import util.exception.CarModelNotEnabledException;
+import util.exception.CarModelNotFoundException;
 import util.exception.CarNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -25,5 +28,7 @@ public interface CarSessionBeanLocal {
     public List<Car> retrieveAllCars();
 
     public Car retrieveCarByCarId(Long carId) throws CarNotFoundException;
+
+    public Long createNewCarJoinCarModelJoinOutlet(Car newCar, Long carModelId, Long outletId) throws CarExistException, UnknownPersistenceException, InputDataValidationException, CarModelNotFoundException, CarModelNotEnabledException, OutletNotFoundException;
 
 }

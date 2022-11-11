@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.CarModel;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CarCategoryNotFoundException;
 import util.exception.CarModelExistException;
 import util.exception.CarModelNotFoundException;
 import util.exception.InputDataValidationException;
@@ -25,5 +26,7 @@ public interface CarModelSessionBeanLocal {
     public List<CarModel> retrieveAllCarModels();
 
     public CarModel retrieveCarModelByCarModelId(Long carModelId) throws CarModelNotFoundException;
+
+    public Long createNewCarModelJoinCarCategory(CarModel newCarModel, Long carCategoryId) throws CarModelExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException;
 
 }

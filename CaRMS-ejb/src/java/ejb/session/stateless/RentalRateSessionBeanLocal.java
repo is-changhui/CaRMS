@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.RentalRate;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CarCategoryNotFoundException;
 import util.exception.DeleteRentalRateRecordException;
 import util.exception.InputDataValidationException;
 import util.exception.RentalRateRecordExistException;
@@ -33,5 +34,7 @@ public interface RentalRateSessionBeanLocal {
     public void updateRentalRate(RentalRate rentalRate) throws UpdateRentalRateRecordException, RentalRateRecordNotFoundException;
 
     public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException, DeleteRentalRateRecordException;
+
+    public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, RentalRateRecordNotFoundException, CarCategoryNotFoundException;
     
 }

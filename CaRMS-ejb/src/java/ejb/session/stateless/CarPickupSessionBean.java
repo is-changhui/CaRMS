@@ -48,6 +48,7 @@ public class CarPickupSessionBean implements CarPickupSessionBeanRemote, CarPick
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newCarPickup);
+                em.flush();
                 return newCarPickup.getPickupId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {

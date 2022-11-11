@@ -39,12 +39,12 @@ public class Outlet implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String outletAddress;
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, length = 32)
 //    @NotNull
 //    @Size(min = 8, max = 32)
     private String outletOpeningHour;
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, length = 32)
 //    @NotNull
 //    @Size(min = 8, max = 32)

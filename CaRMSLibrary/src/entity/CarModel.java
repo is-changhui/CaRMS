@@ -56,13 +56,12 @@ public class CarModel implements Serializable {
         cars = new ArrayList<>();
     }
 
-    public CarModel(String carMake, String modelName, boolean modelIsDisabled) {
+    public CarModel(String carMake, String modelName, boolean modelIsEnabled) {
         this();
         this.carMake = carMake;
         this.modelName = modelName;
-        this.modelIsEnabled = modelIsDisabled;
+        this.modelIsEnabled = modelIsEnabled;
     }
-    
 
     public Long getModelId() {
         return modelId;

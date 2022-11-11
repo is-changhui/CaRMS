@@ -47,6 +47,7 @@ public class CarReturnSessionBean implements CarReturnSessionBeanRemote, CarRetu
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newCarReturn);
+                em.flush();
                 return newCarReturn.getReturnId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
