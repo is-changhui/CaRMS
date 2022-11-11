@@ -86,7 +86,7 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         if (partnerEntity != null) {
             return partnerEntity;
         } else {
-            throw new PartnerNotFoundException("Partner ID " + partnerId + " does not exist!");
+            throw new PartnerNotFoundException("Partner ID [" + partnerId + "] does not exist!");
         }
     }
     

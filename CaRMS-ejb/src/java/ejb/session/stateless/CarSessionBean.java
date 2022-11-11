@@ -104,7 +104,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
                         em.flush();
                         return newCar.getCarId();
                     } else {
-                        throw new CarModelNotEnabledException("Car (make and) model ID " + carModelId + " is not enabled, hence a car record cannot be created!");
+                        throw new CarModelNotEnabledException("Car (make and) model ID [" + carModelId + "] is not enabled, hence a car record cannot be created!");
                     }
 
                 } catch (PersistenceException ex) {
@@ -122,9 +122,9 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
         } catch (CarModelNotFoundException ex) {
-            throw new CarModelNotFoundException("Car Model ID " + carModelId + " does not exist!");
+            throw new CarModelNotFoundException("Car Model ID [" + carModelId + "] does not exist!");
         } catch (OutletNotFoundException ex) {
-            throw new OutletNotFoundException("Outlet ID " + outletId + " does not exist!");
+            throw new OutletNotFoundException("Outlet ID [" + outletId + "] does not exist!");
         }
     }
 
@@ -141,7 +141,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
         if (carFinding != null) {
             return carFinding;
         } else {
-            throw new CarNotFoundException("Car ID " + carId + " does not exist!");
+            throw new CarNotFoundException("Car ID [" + carId + "] does not exist!");
         }
     }
 

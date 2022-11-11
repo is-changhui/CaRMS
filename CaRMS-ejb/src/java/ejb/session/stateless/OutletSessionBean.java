@@ -89,7 +89,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
         if (outletEntity != null) {
             return outletEntity;
         } else {
-            throw new OutletNotFoundException("Outlet ID " + outletId + " does not exist!");
+            throw new OutletNotFoundException("Outlet ID [" + outletId + "] does not exist!");
         }
     }
     
@@ -123,7 +123,7 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
         }
         else
         {
-            throw new OutletNotFoundException("Outlet ID not provided for outlet to be updated");
+            throw new OutletNotFoundException("Outlet ID [" + outlet.getOutletId() + "] does not exist!");
         }
     }
     

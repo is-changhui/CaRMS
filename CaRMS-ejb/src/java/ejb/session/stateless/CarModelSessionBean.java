@@ -104,7 +104,7 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
         } catch (CarCategoryNotFoundException ex) {
-            throw new CarCategoryNotFoundException("Car Category ID " + carCategoryId + " does not exist!");
+            throw new CarCategoryNotFoundException("Car Category ID [" + carCategoryId + "] does not exist!");
         } 
     }
 
@@ -121,7 +121,7 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
         if (carModelFinding != null) {
             return carModelFinding;
         } else {
-            throw new CarModelNotFoundException("CarModel ID " + carModelId + " does not exist!");
+            throw new CarModelNotFoundException("CarModel ID [" + carModelId + "] does not exist!");
         }
     }
 

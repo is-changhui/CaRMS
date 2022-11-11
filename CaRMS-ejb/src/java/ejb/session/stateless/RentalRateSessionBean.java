@@ -115,7 +115,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
     @Override
     public List<RentalRate> retrieveAllRentalRates() {
 
-        // UC10.2: Records should be sorted in ascending order by car category and validity period.
+        // MCUC10.2: Records should be sorted in ascending order by car category and validity period.
         Query query = em.createQuery("SELECT r FROM RentalRate r ORDER BY r.carCategory.categoryName, r.rentalRateStartDateTime, r.rentalRateEndDateTime ASC");
         return query.getResultList();
     }
@@ -129,7 +129,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
         if (rentalRate != null) {
             return rentalRate;
         } else {
-            throw new RentalRateRecordNotFoundException("RentalRate ID [" + rentalRateId + "] does not exist!");
+            throw new RentalRateRecordNotFoundException("Rental Rate ID [" + rentalRateId + "] does not exist!");
         }
     }
 
@@ -141,7 +141,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
         try {
             return (RentalRate) query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException ex) {
-            throw new RentalRateRecordNotFoundException("RentalRate name [" + rentalRateName + "] does not exist!");
+            throw new RentalRateRecordNotFoundException("Rental Rate name [" + rentalRateName + "] does not exist!");
         }
     }
 
@@ -160,11 +160,12 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
                 rentalRateRecordToUpdate.setRentalRateEndDateTime(rentalRate.getRentalRateEndDateTime());
                 rentalRateRecordToUpdate.setIsEnabled(rentalRate.getIsEnabled());
                 rentalRateRecordToUpdate.setIsUsed(rentalRate.getIsUsed());
+                rentalRateRecordToUpdate.setCarCategory(rentalRate.getCarCategory());
             } else {
                 throw new UpdateRentalRateRecordException("Name of rental rate record to be updated does not match the existing record!");
             }
         } else {
-            throw new RentalRateRecordNotFoundException("RentalRate ID not provided for Rental Rate record to be updated");
+            throw new RentalRateRecordNotFoundException("Rental Rate ID [" + rentalRate.getRentalRateId() + "] does not exist!");
         }
     }
 

@@ -86,7 +86,7 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
         if (carCategoryEntity != null) {
             return carCategoryEntity;
         } else {
-            throw new CarCategoryNotFoundException("Car Category ID " + carCategoryId + " does not exist!");
+            throw new CarCategoryNotFoundException("Car Category ID [" + carCategoryId + "] does not exist!");
         }
     }
     

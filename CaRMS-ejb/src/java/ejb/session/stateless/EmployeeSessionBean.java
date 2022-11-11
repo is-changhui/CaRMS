@@ -113,7 +113,7 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
         } catch (OutletNotFoundException ex) {
-            throw new OutletNotFoundException("Outlet ID " + outletId + " does not exist!");
+            throw new OutletNotFoundException("Outlet ID [" + outletId + "] does not exist!");
         }   
     }
     
