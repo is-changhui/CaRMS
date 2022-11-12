@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -87,6 +89,18 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
             return carCategoryEntity;
         } else {
             throw new CarCategoryNotFoundException("Car Category ID [" + carCategoryId + "] does not exist!");
+        }
+    }
+    
+    @Override
+    public CarCategory retrieveCarCategoryByName(String carCategoryName) throws CarCategoryNotFoundException {
+        Query query = em.createQuery("SELECT c FROM CarCategory c WHERE c.categoryName = :incarCategoryName");
+        query.setParameter("incarCategoryName", carCategoryName);
+
+        try {
+            return (CarCategory) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new CarCategoryNotFoundException("Car Category name [" + carCategoryName + "] does not exist!");
         }
     }
     

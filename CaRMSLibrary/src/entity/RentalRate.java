@@ -10,8 +10,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +20,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
-import util.enumeration.RentalRateTypeEnum;
 
 /**
  *
@@ -31,7 +28,6 @@ import util.enumeration.RentalRateTypeEnum;
 @Entity
 public class RentalRate implements Serializable {
 
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,10 +36,10 @@ public class RentalRate implements Serializable {
     @NotNull
 //    @Size(min = 1, max = 32)
     private String rentalRateName;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 32)
     @NotNull
-    private RentalRateTypeEnum rentalRateType;
+//    @Size(min = 1, max = 32)
+    private String rentalRateType;
     @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
@@ -51,11 +47,11 @@ public class RentalRate implements Serializable {
     private BigDecimal rentalDailyRate;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
-    @NotNull
+//    @NotNull
     private Date rentalRateStartDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true)
-    @NotNull
+//    @NotNull
     private Date rentalRateEndDateTime;
     @Column(nullable = false)
     @NotNull
@@ -63,18 +59,17 @@ public class RentalRate implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean isUsed;
-    
+
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private CarCategory carCategory;
-    
-    
+
     public RentalRate() {
         isEnabled = true;
         isUsed = false;
     }
 
-    public RentalRate(String rentalRateName, RentalRateTypeEnum rentalRateType, BigDecimal rentalDailyRate, Date rentalRateStartDateTime, Date rentalRateEndDateTime, Boolean isEnabled, Boolean isUsed) {
+    public RentalRate(String rentalRateName, String rentalRateType, BigDecimal rentalDailyRate, Date rentalRateStartDateTime, Date rentalRateEndDateTime, Boolean isEnabled, Boolean isUsed) {
         this();
         this.rentalRateName = rentalRateName;
         this.rentalRateType = rentalRateType;
@@ -92,7 +87,7 @@ public class RentalRate implements Serializable {
     public void setRentalRateId(Long rentalRateId) {
         this.rentalRateId = rentalRateId;
     }
-    
+
     /**
      * @return the rentalRateName
      */
@@ -106,18 +101,18 @@ public class RentalRate implements Serializable {
     public void setRentalRateName(String rentalRateName) {
         this.rentalRateName = rentalRateName;
     }
-    
+
     /**
      * @return the rentalRateType
      */
-    public RentalRateTypeEnum getRentalRateType() {
+    public String getRentalRateType() {
         return rentalRateType;
     }
 
     /**
      * @param rentalRateType the rentalRateType to set
      */
-    public void setRentalRateType(RentalRateTypeEnum rentalRateType) {
+    public void setRentalRateType(String rentalRateType) {
         this.rentalRateType = rentalRateType;
     }
 
@@ -190,7 +185,7 @@ public class RentalRate implements Serializable {
     public void setIsUsed(Boolean isUsed) {
         this.isUsed = isUsed;
     }
-    
+
     /**
      * @return the carCategory
      */
@@ -229,5 +224,5 @@ public class RentalRate implements Serializable {
     public String toString() {
         return "entity.RentalRate[ id=" + rentalRateId + " ]";
     }
-    
+
 }

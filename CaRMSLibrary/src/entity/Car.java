@@ -6,11 +6,8 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import util.enumeration.CarStatusEnum;
 
 /**
  *
@@ -46,10 +42,10 @@ public class Car implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean carIsEnabled;
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 32)
     @NotNull
-    private CarStatusEnum carStatus;
+//    @Size(min = 8, max = 32)
+    private String carStatus;
 //    @Column(nullable = false, length = 32)
 //    @NotNull
 ////    @Size(min = 1, max = 32)
@@ -70,11 +66,10 @@ public class Car implements Serializable {
 
     
     public Car() {
-        carStatus = CarStatusEnum.AVAILABLE;
         carIsEnabled = true;
     }
 
-    public Car(String carLicensePlate, String carColour, Boolean carIsEnabled, CarStatusEnum carStatus) {
+    public Car(String carLicensePlate, String carColour, Boolean carIsEnabled, String carStatus) {
         this();
         this.carLicensePlate = carLicensePlate;
         this.carColour = carColour;
@@ -131,14 +126,14 @@ public class Car implements Serializable {
     /**
      * @return the carStatus
      */
-    public CarStatusEnum getCarStatus() {
+    public String getCarStatus() {
         return carStatus;
     }
 
     /**
      * @param carStatus the carStatus to set
      */
-    public void setCarStatus(CarStatusEnum carStatus) {
+    public void setCarStatus(String carStatus) {
         this.carStatus = carStatus;
     }
     

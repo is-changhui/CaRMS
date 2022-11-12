@@ -25,5 +25,7 @@ public interface CarCategorySessionBeanLocal {
     public List<CarCategory> retrieveAllCarCategories();
 
     public CarCategory retrieveCarCategoryById(Long carCategoryId) throws CarCategoryNotFoundException;
+
+    public CarCategory retrieveCarCategoryByName(String carCategoryName) throws CarCategoryNotFoundException;
     
 }

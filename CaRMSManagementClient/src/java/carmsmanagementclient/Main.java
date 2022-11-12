@@ -6,7 +6,13 @@
 package carmsmanagementclient;
 
 import ejb.session.stateless.CarCategorySessionBeanRemote;
+import ejb.session.stateless.CarModelSessionBeanRemote;
+import ejb.session.stateless.CarPickupSessionBeanRemote;
+import ejb.session.stateless.CarReturnSessionBeanRemote;
+import ejb.session.stateless.CarSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+import ejb.session.stateless.OutletSessionBeanRemote;
+import ejb.session.stateless.RentalRateSessionBeanRemote;
 import javax.ejb.EJB;
 
 /**
@@ -15,7 +21,26 @@ import javax.ejb.EJB;
  */
 public class Main {
 
+    @EJB
+    private static RentalRateSessionBeanRemote rentalRateSessionBeanRemote;
 
+    @EJB
+    private static OutletSessionBeanRemote outletSessionBeanRemote;
+
+    @EJB
+    private static CarSessionBeanRemote carSessionBeanRemote;
+
+    @EJB
+    private static CarReturnSessionBeanRemote carReturnSessionBeanRemote;
+
+    @EJB
+    private static CarPickupSessionBeanRemote carPickupSessionBeanRemote;
+
+    @EJB
+    private static CarModelSessionBeanRemote carModelSessionBeanRemote;
+
+    @EJB
+    private static CarCategorySessionBeanRemote carCategorySessionBeanRemote;
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
@@ -28,7 +53,7 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote);
+        MainApp mainApp = new MainApp(rentalRateSessionBeanRemote, outletSessionBeanRemote, carSessionBeanRemote, carReturnSessionBeanRemote, carPickupSessionBeanRemote, carModelSessionBeanRemote, carCategorySessionBeanRemote, employeeSessionBeanRemote);
         mainApp.runApp();
         
     }
