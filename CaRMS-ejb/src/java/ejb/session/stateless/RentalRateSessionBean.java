@@ -79,7 +79,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
 
     // For use in DataInitSessionBean
     @Override
-    public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, RentalRateRecordNotFoundException, CarCategoryNotFoundException {
+    public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException {
         try {
             Set<ConstraintViolation<RentalRate>> constraintViolations = validator.validate(newRentalRate);
 

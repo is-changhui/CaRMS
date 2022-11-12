@@ -20,7 +20,6 @@ import entity.Outlet;
 import entity.Partner;
 import entity.RentalRate;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,7 +45,6 @@ import util.exception.OutletNotFoundException;
 import util.exception.PartnerExistException;
 import util.exception.PartnerNotFoundException;
 import util.exception.RentalRateRecordExistException;
-import util.exception.RentalRateRecordNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 /**
@@ -198,7 +196,7 @@ public class DataInitSessionBean {
 
             partnerSessionBeanLocal.createNewPartner(new Partner("Holiday.com", "holidaymanager", "password"));
 
-        } catch (RentalRateRecordExistException | RentalRateRecordNotFoundException | ParseException | CarModelNotEnabledException | CarModelNotFoundException | CarExistException | CarCategoryNotFoundException | CarModelExistException | OutletExistException | OutletNotFoundException | EmployeeUsernameExistException | PartnerExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
+        } catch (RentalRateRecordExistException | ParseException | CarModelNotEnabledException | CarModelNotFoundException | CarExistException | CarCategoryNotFoundException | CarModelExistException | OutletExistException | OutletNotFoundException | EmployeeUsernameExistException | PartnerExistException | CarCategoryExistException | UnknownPersistenceException | InputDataValidationException ex) {
             ex.printStackTrace();
         }
     }

@@ -35,5 +35,5 @@ public interface RentalRateSessionBeanRemote {
 
     public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException, DeleteRentalRateRecordException;
     
-    public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, RentalRateRecordNotFoundException, CarCategoryNotFoundException;
+    public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException;
 }
