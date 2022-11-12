@@ -133,7 +133,6 @@ public class SalesManagementModule {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
-
             if (response == 6) {
                 break;
             }
@@ -154,17 +153,17 @@ public class SalesManagementModule {
             System.out.println("2: View All Models");
             System.out.println("3: Update Model");
             System.out.println("4: Delete Model");
-            System.out.println("---------------------------");
+            System.out.println("-----------------------------------------");
             System.out.println("5: Create New Car");
             System.out.println("6: View All Cars");
             System.out.println("7: View Car Details");
             System.out.println("8: Update Car");
             System.out.println("9: Delete Car");
-            System.out.println("---------------------------");
+            System.out.println("-----------------------------------------");
             System.out.println("10: View Transit Driver Dispatch Records for Current Day Reservations");
             System.out.println("11: Assign Transit Driver");
             System.out.println("12: Update Transit As Completed");
-            System.out.println("---------------------------");
+            System.out.println("-----------------------------------------");
             System.out.println("13: Back\n");
             response = 0;
 
@@ -174,29 +173,29 @@ public class SalesManagementModule {
                 response = scanner.nextInt();
 
                 if (response == 1) {
-//                    doCreateNewModel();
+                    doCreateNewModel();
                 } else if (response == 2) {
-//                    doViewAllModels();
+                    doViewAllModels();
                 } else if (response == 3) {
-//                    doUpdateModel();
+                    doUpdateModel();
                 } else if (response == 4) {
-//                    doDeleteModel();
+                    doDeleteModel();
                 } else if (response == 5) {
-//                    doCreateNewCar();
+                    doCreateNewCar();
                 } else if (response == 6) {
-//                    doViewAllCars();
+                    doViewAllCars();
                 } else if (response == 7) {
-//                    doViewCarDetails();
+                    doViewCarDetails();
                 } else if (response == 8) {
-//                    doUpdateCar();
+                    doUpdateCar();
                 } else if (response == 9) {
-//                    doDeleteCar();
+                    doDeleteCar();
                 } else if (response == 10) {
-//                    doViewTransitDriverDispatchRecordsForCurrentDayReservations();
+                    doViewTransitDriverDispatchRecordsForCurrentDayReservations();
                 } else if (response == 11) {
-//                    doAssignTransitDriver();
+                    doAssignTransitDriver();
                 } else if (response == 12) {
-//                    doUpdateTransitAsCompleted();
+                    doUpdateTransitAsCompleted();
                 } else if (response == 13) {
                     break;
                 } else {
@@ -299,7 +298,7 @@ public class SalesManagementModule {
         System.out.println("*** CaRMS :: Sales :: View Rental Rate Details ***\n");
         System.out.print("Enter Rental Rate Name> ");
         String rentalRateName = scanner.nextLine().trim();
-        
+
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
 
         try {
@@ -335,7 +334,7 @@ public class SalesManagementModule {
         System.out.print("Enter Rental Rate Name> ");
         String rentalRateName = scanner.nextLine().trim();
         RentalRate r = new RentalRate();
-        
+
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
 
         try {
@@ -472,7 +471,7 @@ public class SalesManagementModule {
         String rentalRateName = scanner.nextLine().trim();
         RentalRate r = new RentalRate();
         Long rId = r.getRentalRateId();
-        
+
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
 
         try {
@@ -501,7 +500,56 @@ public class SalesManagementModule {
         } catch (RentalRateRecordNotFoundException ex) {
             System.out.println("An error has occurred while creating the new rental rate!: The record is not found!\n");
         } catch (DeleteRentalRateRecordException ex) {
-            System.out.println("Rental Rate ID [" + r.getRentalRateId() + "] does not exist!\n");
+            System.out.println("Rental Rate ID [" + rId + "] does not exist!\n");
         }
     }
+
+    private void doCreateNewModel() {
+
+    }
+
+    private void doViewAllModels() {
+
+    }
+
+    private void doUpdateModel() {
+
+    }
+
+    private void doDeleteModel() {
+
+    }
+
+    private void doCreateNewCar() {
+
+    }
+
+    private void doViewAllCars() {
+
+    }
+
+    private void doViewCarDetails() {
+
+    }
+
+    private void doUpdateCar() {
+
+    }
+
+    private void doDeleteCar() {
+
+    }
+
+    private void doViewTransitDriverDispatchRecordsForCurrentDayReservations() {
+
+    }
+
+    private void doAssignTransitDriver() {
+
+    }
+
+    private void doUpdateTransitAsCompleted() {
+
+    }
+
 }
