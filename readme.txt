@@ -2,7 +2,7 @@ IS2103 AY2022/2023 Semester 1 Pair Project PP06
 ===============================================
 
 Team Lead
-Ebenzer Denzel Shemaiah
+Ebenezer Denzel Shemaiah
 A0217295Y
 e0540852@u.nus.edu
 
