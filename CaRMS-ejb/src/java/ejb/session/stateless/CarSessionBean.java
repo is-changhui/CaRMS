@@ -10,6 +10,8 @@ import entity.CarModel;
 import entity.Outlet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -195,10 +197,12 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
     }
 
     @Override
-    public void deleteCar(Long carId) throws CarNotFoundException {
+    public void deleteCar(Long carId, Long carModelId) throws CarNotFoundException {
         try {
             Car carToRemove = retrieveCarByCarId(carId);
+            CarModel carModel = carModelSessionBeanLocal.retrieveCarModelById(carModelId);
             if (carToRemove.getRentalReservation() == null) {
+                carModel.getCars().remove(carToRemove);
                 em.remove(carToRemove);
             } else {
                 carToRemove.setCarIsEnabled(Boolean.FALSE);
@@ -206,6 +210,8 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             }
         } catch (CarNotFoundException ex) {
             throw new CarNotFoundException("Car ID [" + carId + "] cannot be found!");
+        } catch (CarModelNotFoundException ex) {
+            throw new CarNotFoundException("Car Model ID [" + carModelId + "] cannot be found!");
         }
     }
 

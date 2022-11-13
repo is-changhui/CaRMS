@@ -277,7 +277,7 @@ public class SalesManagementModule {
         System.out.println("*** CaRMS :: Sales :: View All Rental Rates ***\n");
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         List<RentalRate> rentalRateList = rentalRateSessionBeanRemote.retrieveAllRentalRates();
 
         for (RentalRate r : rentalRateList) {
@@ -314,7 +314,7 @@ public class SalesManagementModule {
         String rentalRateName = scanner.nextLine().trim();
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         try {
             RentalRate r = rentalRateSessionBeanRemote.retrieveRentalRateByName(rentalRateName);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -671,7 +671,7 @@ public class SalesManagementModule {
 
         System.out.println("*** CaRMS :: Operations :: View All Cars ***\n");
         System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         List<Car> carList = carSessionBeanRemote.retrieveAllCars();
 
@@ -695,7 +695,7 @@ public class SalesManagementModule {
         String carLicensePlate = scanner.nextLine().trim();
 
         System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
-        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------------------------------------------------------------------------");
         try {
             Car car = carSessionBeanRemote.retrieveCarByLicensePlate(carLicensePlate);
 
@@ -746,7 +746,7 @@ public class SalesManagementModule {
         car.setCarColour(scanner.nextLine().trim());
         try {
             carSessionBeanRemote.updateCar(car);
-            System.out.println("Car updated successfully!: " + car.getCarId() + "\n");
+            System.out.println("Car updated successfully!: " + car.getCarId());
         } catch (CarNotFoundException ex) {
             System.out.println("An error has occurred while retrieving car!: The record is not found!\n");
         } catch (InputDataValidationException ex) {
@@ -775,7 +775,7 @@ public class SalesManagementModule {
                 isEnabled = "Disabled";
             }
             System.out.printf("%4s%30s%30s%30s%20s%15s\n", car.getCarId(), car.getCarLicensePlate(), car.getCarModel().getCarMake(), car.getCarModel().getModelName(), car.getCarStatus(), isEnabled);
-            carSessionBeanRemote.deleteCar(carId);
+            carSessionBeanRemote.deleteCar(carId, car.getCarModel().getModelId());
             System.out.println("Car deleted successfully!: [" + carId + "] \n");
         } catch (CarNotFoundException ex) {
             System.out.println("Car license plate number [" + carLicensePlate + "] does not exist!");

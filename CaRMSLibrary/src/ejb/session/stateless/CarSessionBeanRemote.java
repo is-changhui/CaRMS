@@ -33,7 +33,7 @@ public interface CarSessionBeanRemote {
     
     public void updateCar(Car car) throws InputDataValidationException, CarNotFoundException;
 
-    public void deleteCar(Long carId) throws CarNotFoundException;
+    public void deleteCar(Long carId, Long carModelId) throws CarNotFoundException;
     
     public Car retrieveCarByLicensePlate(String licensePlate) throws CarNotFoundException;
     

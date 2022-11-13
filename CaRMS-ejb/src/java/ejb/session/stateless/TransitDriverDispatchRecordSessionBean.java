@@ -7,16 +7,19 @@ package ejb.session.stateless;
 
 import entity.Employee;
 import entity.Outlet;
+import entity.RentalRate;
 import entity.RentalReservation;
 import entity.TransitDriverDispatchRecord;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -47,17 +50,18 @@ public class TransitDriverDispatchRecordSessionBean implements TransitDriverDisp
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    private final ValidatorFactory validatorFactory;
-    private final Validator validator;
+//    private final ValidatorFactory validatorFactory;
+//    private final Validator validator;
 
     
     public TransitDriverDispatchRecordSessionBean() {
-        validatorFactory = Validation.buildDefaultValidatorFactory();
-        validator = validatorFactory.getValidator();
+//        validatorFactory = Validation.buildDefaultValidatorFactory();
+//        validator = validatorFactory.getValidator();
     }
 
     @Override
     public Long CreateNewTransitDriverDispatchRecord(Date dispatchDate, Long destinationOutletId, Long rentalReservationId) throws OutletNotFoundException, RentalReservationNotFoundException {
+        
         try {
             RentalReservation rentalReservation = rentalReservationSessionBeanLocal.retrieveRentalReservationById(rentalReservationId);
             Outlet destinationOutlet = outletSessionBeanLocal.retrieveOutletById(destinationOutletId);

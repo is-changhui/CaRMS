@@ -30,6 +30,7 @@ import util.exception.EmptyRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.OutletNotFoundException;
+import util.exception.PickupReturnClashException;
 import util.exception.PickupReturnTimeException;
 import util.exception.RentalReservationNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -217,10 +218,14 @@ public class MainApp {
             System.out.print("Enter desired Return Date and Time (DD/MM/YYYY HH:MM)> ");
             returnDateTime = sdf.parse(scanner.nextLine().trim());
 
+            if (pickupDateTime.getTime() - returnDateTime.getTime() >= 0) {
+                throw new PickupReturnClashException("Pickup Date and Time cannot be before Return Date and Time!");
+            }
+
             List<Outlet> outletList = outletSessionBeanRemote.retrieveAllOutlets();
             System.out.println("You are given the following available outlets. Please consider the pickup and return outlet IDs carefully...\n");
             System.out.printf("%4s%30s%30s%20s%20s\n", "ID", "Outlet Name", "Address", "Opening Hour", "Closing Hour");
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------");
             for (Outlet o : outletList) {
                 String openingHour = "All-day";
                 if (o.getOutletOpeningHour() != null) {
@@ -244,10 +249,10 @@ public class MainApp {
             Outlet returnOutlet = outletSessionBeanRemote.retrieveOutletById(returnOutletId);
             if (pickupOutlet.getOutletOpeningHour() != null) {
                 Long differenceInOpeningTime = pickupDateTime.getTime() - pickupOutlet.getOutletOpeningHour().getTime();
-                Long differenceInOpeningHour = (differenceInOpeningTime / (1000 * 60 * 60)) % 24;
+                Long differenceInOpeningHour = (differenceInOpeningTime / (60 * 60 * 1000) % 24);
                 Long differenceInOpeningMinute = (differenceInOpeningTime / (1000 * 60)) % 60;
                 Long differenceInClosingTime = pickupDateTime.getTime() - pickupOutlet.getOutletClosingHour().getTime();
-                Long differenceInClosingHour = (differenceInClosingTime / (1000 * 60 * 60)) % 24;
+                Long differenceInClosingHour = (differenceInClosingTime / (60 * 60 * 1000) % 24);
                 Long differenceInClosingMinute = (differenceInClosingTime / (1000 * 60)) % 60;
 
                 if ((differenceInOpeningHour < 0) || ((differenceInOpeningHour == 0) && (differenceInOpeningMinute < 0))) {
@@ -343,6 +348,8 @@ public class MainApp {
             System.out.println(ex.getMessage());
         } catch (EmptyRentalRateException ex) {
             System.out.println("There are no rental rates available for the day!");
+        } catch (PickupReturnClashException ex) {
+            System.out.println("Pickup Date and Time cannot be before Return Date and Time!");
         }
     }
 
@@ -433,7 +440,7 @@ public class MainApp {
             r = rentalReservationSessionBeanRemote.retrieveRentalReservationById(rentalReservationId);
             System.out.printf("%4s%20s%25s%20s%20s%20s%15s%15s%15s\n", "ID", "Car Make", "Model Name", "Car Category",
                     "Pickup Date", "Return Date", "Rental Fee", "Paid", "Cancelled");
-            System.out.println("-------------------------------------------------------------------------------------------------------------");
+            System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------");
             String isPaid = "Paid";
             if (!r.getRentalReservationIsPaid()) {
                 isPaid = "Unpaid";
@@ -442,11 +449,21 @@ public class MainApp {
             if (r.getRentalReservationIsCancelled()) {
                 isCancelled = "Cancelled";
             }
+            String carMakeName = "-";
+            String carModelName = "-";
+            String carCategoryName = "-";
+            if (r.getCarModel() != null) {
+                carMakeName = r.getCarModel().getCarMake();
+                carModelName = r.getCarModel().getModelName();
+            }
+            if (r.getCarCategory() != null) {
+                carCategoryName = r.getCarCategory().getCategoryName();
+            }
             String pickupDateTime = sdf.format(r.getRentalReservationPickupDateTime());
             String returnDateTime = sdf.format(r.getRentalReservationReturnDateTime());
             System.out.printf("%4s%20s%25s%20s%20s%20s%15s%15s%15s\n", r.getRentalReservationId(),
-                    r.getCarModel().getCarMake(), r.getCarModel().getModelName(),
-                    r.getCarCategory().getCategoryName(), pickupDateTime,
+                    carMakeName, carModelName,
+                    carCategoryName, pickupDateTime,
                     returnDateTime, r.getRentalReservationAmount(),
                     isPaid, isCancelled);
             System.out.print("Proceed to cancel reservation? ('Y' to cancel)> ");
@@ -469,10 +486,11 @@ public class MainApp {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         System.out.println("*** CaRMS Reservation Client :: View All My Reservations ***\n");
-        System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
-        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%4s%20s%25s%20s%20s%20s%15s%15s%15s\n", "ID", "Car Make", "Model Name", "Car Category",
+                "Pickup Date", "Return Date", "Rental Fee", "Paid", "Cancelled");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-        List<RentalReservation> reservationList = rentalReservationSessionBeanRemote.retrieveAllRentalReservations();
+        List<RentalReservation> reservationList = rentalReservationSessionBeanRemote.retrieveCustomerRentalReservations(currentCustomerEntity.getCustomerId());
 
         for (RentalReservation r : reservationList) {
             String isPaid = "Paid";
@@ -483,12 +501,22 @@ public class MainApp {
             if (r.getRentalReservationIsCancelled()) {
                 isCancelled = "Cancelled";
             }
+            String carMakeName = "-";
+            String carModelName = "-";
+            String carCategoryName = "-";
+            if (r.getCarModel() != null) {
+                carMakeName = r.getCarModel().getCarMake();
+                carModelName = r.getCarModel().getModelName();
+            }
+            if (r.getCarCategory() != null) {
+                carCategoryName = r.getCarCategory().getCategoryName();
+            }
             String pickupDateTime = sdf.format(r.getRentalReservationPickupDateTime());
             String returnDateTime = sdf.format(r.getRentalReservationReturnDateTime());
 
             System.out.printf("%4s%20s%25s%20s%20s%20s%15s%15s%15s\n", r.getRentalReservationId(),
-                    r.getCarModel().getCarMake(), r.getCarModel().getModelName(),
-                    r.getCarCategory().getCategoryName(), pickupDateTime,
+                    carMakeName, carModelName,
+                    carCategoryName, pickupDateTime,
                     returnDateTime, r.getRentalReservationAmount(),
                     isPaid, isCancelled);
         }

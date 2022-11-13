@@ -46,10 +46,6 @@ public class Car implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String carStatus;
-//    @Column(nullable = false, length = 32)
-//    @NotNull
-////    @Size(min = 1, max = 32)
-//    private String carLocation;
     
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)

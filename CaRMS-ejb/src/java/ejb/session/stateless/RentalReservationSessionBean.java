@@ -83,13 +83,11 @@ public class RentalReservationSessionBean implements RentalReservationSessionBea
             Set<ConstraintViolation<RentalReservation>> constraintViolations = validator.validate(newRentalReservation);
             if (constraintViolations.isEmpty()) {
                 Customer customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
-                newRentalReservation.setCustomer(customer);
+                
                 Outlet pickupOutlet = outletSessionBeanLocal.retrieveOutletById(pickupOutletId);
                 newRentalReservation.setPickupOutlet(pickupOutlet);
                 Outlet returnOutlet = outletSessionBeanLocal.retrieveOutletById(returnOutletId);
                 newRentalReservation.setReturnOutlet(returnOutlet);
-                
-                customer.getRentalReservations().add(newRentalReservation);
                 
                 CarCategory carCategory = new CarCategory();
                 CarModel carModel = new CarModel();
@@ -103,6 +101,9 @@ public class RentalReservationSessionBean implements RentalReservationSessionBea
                     newRentalReservation.setCarCategory(carCategory);
                     newRentalReservation.setCarModel(carModel);
                 }
+                newRentalReservation.setCustomer(customer);
+                customer.getRentalReservations().add(newRentalReservation);
+                
                 em.persist(newRentalReservation);
                 em.flush();
             } else {
@@ -224,7 +225,7 @@ public class RentalReservationSessionBean implements RentalReservationSessionBea
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             Date rentalReservationStartDate = rentalReservationToCancel.getRentalReservationPickupDateTime();
             Date currentDate = new Date();
-            Long differenceInDays = ((rentalReservationStartDate.getTime() - currentDate.getTime()) / (1000*60*60*24*365)) % 365;
+            Long differenceInDays = (rentalReservationStartDate.getTime() - currentDate.getTime()) / (24*60*60*1000);
             BigDecimal rentalReservationAmount = rentalReservationToCancel.getRentalReservationAmount();
 
             // PP Narrative pg 2: Penalty rates differ by duration away from reservation date
@@ -347,24 +348,28 @@ public class RentalReservationSessionBean implements RentalReservationSessionBea
         query.setParameter("inModelId", carModelId);
         query.setParameter("inPickupDateTime", pickupDateTime);
         query.setParameter("inReturnDateTime", returnDateTime);
+        System.out.println(query.getResultList());
         rentalReservationList.addAll(query.getResultList());
         
         query = em.createQuery("SELECT rr FROM RentalReservation rr WHERE rr.carModel.modelId = :inModelId AND rr.rentalReservationPickupDateTime >= :inPickupDateTime AND rr.rentalReservationReturnDateTime <= :inReturnDateTime AND rr.rentalReservationIsCancelled = FALSE");
         query.setParameter("inModelId", carModelId);
         query.setParameter("inPickupDateTime", pickupDateTime);
         query.setParameter("inReturnDateTime", returnDateTime);
+        System.out.println(query.getResultList());
         rentalReservationList.addAll(query.getResultList());
         
         query = em.createQuery("SELECT rr FROM RentalReservation rr WHERE rr.carModel.modelId = :inModelId AND rr.rentalReservationPickupDateTime >= :inPickupDateTime AND rr.rentalReservationReturnDateTime > :inReturnDateTime AND rr.rentalReservationIsCancelled = FALSE");
         query.setParameter("inModelId", carModelId);
         query.setParameter("inPickupDateTime", pickupDateTime);
         query.setParameter("inReturnDateTime", returnDateTime);
+        System.out.println(query.getResultList());
         rentalReservationList.addAll(query.getResultList());
         
         query = em.createQuery("SELECT rr FROM RentalReservation rr WHERE rr.carModel.modelId = :inModelId AND rr.rentalReservationPickupDateTime <= :inPickupDateTime AND rr.rentalReservationReturnDateTime >= :inReturnDateTime AND rr.rentalReservationIsCancelled = FALSE");
         query.setParameter("inModelId", carModelId);
         query.setParameter("inPickupDateTime", pickupDateTime);
         query.setParameter("inReturnDateTime", returnDateTime);
+        System.out.println(query.getResultList());
         rentalReservationList.addAll(query.getResultList());
         
         Calendar cal = Calendar.getInstance();
@@ -378,6 +383,7 @@ public class RentalReservationSessionBean implements RentalReservationSessionBea
         query.setParameter("inPickupDateTime", pickupDateTime);
         query.setParameter("inTransitDateTime", transitDate);
         query.setParameter("inPickupOutletId", pickupOutletId);
+        System.out.println(query.getResultList());
         rentalReservationList.addAll(query.getResultList());
         
         CarModel carModel = carModelSessionBeanLocal.retrieveCarModelById(carModelId);
