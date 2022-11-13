@@ -61,6 +61,7 @@ public class TransitDriverDispatchRecord implements Serializable {
 
     public TransitDriverDispatchRecord() {
         transitIsComplete = false;
+        dispatchDuration = Long.valueOf(2);
     }
 
     public TransitDriverDispatchRecord(Boolean transitIsComplete, Date dispatchDate, Long dispatchDuration) {

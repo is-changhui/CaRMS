@@ -19,8 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -68,53 +66,32 @@ public class MainApp {
         while (true) {
             System.out.println("*** Welcome to Car Rental Management System (CaRMS) Management Client ***");
             // MCUC5: Input required date to do car allocation manually
-            System.out.println("1: Perform Car Allocation");
-            System.out.println("2: Login");
-            System.out.println("3: Exit\n");
+            System.out.println("1: Login");
+            System.out.println("2: Exit\n");
             response = 0;
 
-            while (response < 1 || response > 3) {
+            while (response < 1 || response > 2) {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if (response == 1) {
-                    doAllocateCarToSpecificDayReservations();
-                } else if (response == 2) {
                     try {
                         doLogin();
                         System.out.println("Login successful!\n");
                         customerServiceModule = new CustomerServiceModule(rentalReservationSessionBeanRemote, currentEmployeeEntity);
-                        salesManagementModule = new SalesManagementModule(rentalRateSessionBeanRemote, outletSessionBeanRemote, carSessionBeanRemote, carModelSessionBeanRemote, carCategorySessionBeanRemote, currentEmployeeEntity);
+                        salesManagementModule = new SalesManagementModule(rentalRateSessionBeanRemote, outletSessionBeanRemote, carSessionBeanRemote, carModelSessionBeanRemote, carCategorySessionBeanRemote, transitDriverDispatchRecordSessionBeanRemote, currentEmployeeEntity);
                         menuMain();
                     } catch (InvalidLoginCredentialException ex) {
                         System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
                     }
-                } else if (response == 3) {
+                } else if (response == 2) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
-            if (response == 3) {
+            if (response == 2) {
                 break;
             }
-        }
-    }
-    
-    // MCUC5
-    private void doAllocateCarToSpecificDayReservations() {
-        Scanner scanner = new Scanner(System.in);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        
-        System.out.println("*** CaRMS Management Client :: SPECIAL OPS :: Allocate Cars to Specified Day Reservations ***\n");
-        
-        System.out.print("Enter Date To Perform Car Allocations For (DD/MM/YYYY)> ");
-        String specifiedDate = scanner.nextLine().trim();
-        try {
-            Date date = sdf.parse(specifiedDate);
-            ejbTimerSessionBeanRemote.allocateCarsToCurrentDayReservations(date);
-            System.out.println("SPECIAL OPS COMPLETED:: Car allocations made successfully for the specified date, " + specifiedDate);
-        } catch (ParseException ex) {
-            System.out.println("Invalid date format!");
         }
     }
 
@@ -143,35 +120,56 @@ public class MainApp {
         while (true) {
             System.out.println("*** CaRMS Management Client ***\n");
             System.out.println("You are login as " + currentEmployeeEntity.getEmployeeName() + " with " + currentEmployeeEntity.getEmployeeAccessRight().toString() + " rights\n");
-            System.out.println("1: Sales Management");
-            System.out.println("2: Customer Service");
-            System.out.println("3: Logout\n");
+            System.out.println("1: Perform Car Allocation");
+            System.out.println("2: Sales Management");
+            System.out.println("3: Customer Service");
+            System.out.println("4: Logout\n");
             response = 0;
 
-            while (response < 1 || response > 3) {
+            while (response < 1 || response > 4) {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if (response == 1) {
+                    doAllocateCarToSpecificDayReservations();
+                } else if (response == 2) {
                     try {
                         salesManagementModule.menuSalesManagement();
                     } catch (InvalidAccessRightException ex) {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
-                } else if (response == 2) {
+                } else if (response == 3) {
                     try {
                         customerServiceModule.menuCustomerService();
                     } catch (InvalidAccessRightException ex) {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
-                } else if (response == 3) {
+                } else if (response == 4) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
-            if (response == 3) {
+            if (response == 4) {
                 break;
             }
+        }
+    }
+
+    // MCUC5
+    private void doAllocateCarToSpecificDayReservations() {
+        Scanner scanner = new Scanner(System.in);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println("*** CaRMS Management Client :: SPECIAL OPS :: Allocate Cars to Specified Day Reservations ***\n");
+
+        System.out.print("Enter Date To Perform Car Allocations For (DD/MM/YYYY)> ");
+        String specifiedDate = scanner.nextLine().trim();
+        try {
+            Date date = sdf.parse(specifiedDate);
+            ejbTimerSessionBeanRemote.allocateCarsToCurrentDayReservations(date);
+            System.out.println("SPECIAL OPS COMPLETED:: Car allocations made successfully for the specified date, " + specifiedDate);
+        } catch (ParseException ex) {
+            System.out.println("Invalid date format!");
         }
     }
 }

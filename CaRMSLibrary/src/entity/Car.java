@@ -63,6 +63,7 @@ public class Car implements Serializable {
     
     public Car() {
         carIsEnabled = true;
+        carStatus = "Available";
     }
 
     public Car(String carLicensePlate, String carColour, Boolean carIsEnabled, String carStatus) {

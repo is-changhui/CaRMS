@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -18,6 +20,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.InputDataValidationException;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.PartnerExistException;
 import util.exception.PartnerNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -87,6 +90,33 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
             return partnerEntity;
         } else {
             throw new PartnerNotFoundException("Partner ID [" + partnerId + "] does not exist!");
+        }
+    }
+    
+    @Override
+    public Partner retrievePartnerByUsername(String username) throws PartnerNotFoundException {
+        Query query = em.createQuery("SELECT e FROM Partner e WHERE e.partnerUsername = :inPartnerUsername");
+        query.setParameter("inPartnerUsername", username);
+        
+        try {
+            return (Partner)query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new PartnerNotFoundException("Partner Username " + username + " does not exist!");
+        }
+    }
+    
+    @Override
+    public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException {
+        try {
+            Partner partnerEntity = retrievePartnerByUsername(username);
+            
+            if (partnerEntity.getPartnerPassword().equals(password)) {              
+                return partnerEntity;
+            } else {
+                throw new InvalidLoginCredentialException("Invalid username and/or password!");
+            }
+        } catch (PartnerNotFoundException ex) {
+            throw new InvalidLoginCredentialException("Invalid username and/or password!");
         }
     }
     

@@ -1,19 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package carmsreservationclient;
+package holidayreservationsystem;
 
 import ejb.session.stateless.CarCategorySessionBeanRemote;
 import ejb.session.stateless.CarModelSessionBeanRemote;
-import ejb.session.stateless.CustomerSessionBeanRemote;
 import ejb.session.stateless.OutletSessionBeanRemote;
+import ejb.session.stateless.PartnerCustomerSessionBeanRemote;
+import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.RentalReservationSessionBeanRemote;
 import entity.CarCategory;
 import entity.CarModel;
-import entity.Customer;
 import entity.Outlet;
+import entity.Partner;
+import entity.PartnerCustomer;
 import entity.RentalReservation;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -21,64 +18,72 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.exception.CarCategoryNotFoundException;
 import util.exception.CarModelNotFoundException;
-import util.exception.CustomerUsernameExistException;
 import util.exception.EmptyRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.OutletNotFoundException;
+import util.exception.PartnerCustomerNameExistException;
+import util.exception.PartnerNotFoundException;
 import util.exception.PickupReturnClashException;
 import util.exception.PickupReturnTimeException;
 import util.exception.RentalReservationNotFoundException;
 import util.exception.UnknownPersistenceException;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 /**
  *
  * @author Darie
  */
 public class MainApp {
-
-    private CustomerSessionBeanRemote customerSessionBeanRemote;
+    
+    private PartnerSessionBeanRemote partnerSessionBeanRemote;
     private RentalReservationSessionBeanRemote rentalReservationSessionBeanRemote;
     private CarModelSessionBeanRemote carModelSessionBeanRemote;
     private CarCategorySessionBeanRemote carCategorySessionBeanRemote;
     private OutletSessionBeanRemote outletSessionBeanRemote;
-
-    private Customer currentCustomerEntity;
+    private PartnerCustomerSessionBeanRemote partnerCustomerSessionBeanRemote;
+    
+    private Partner currentPartnerEntity;
 
     public MainApp() {
+
     }
 
-    public MainApp(CustomerSessionBeanRemote customerSessionBeanRemote, RentalReservationSessionBeanRemote rentalReservationSessionBeanRemote, CarModelSessionBeanRemote carModelSessionBeanRemote, CarCategorySessionBeanRemote carCategorySessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote) {
+    public MainApp(PartnerSessionBeanRemote partnerSessionBeanRemote, RentalReservationSessionBeanRemote rentalReservationSessionBeanRemote, CarModelSessionBeanRemote carModelSessionBeanRemote, CarCategorySessionBeanRemote carCategorySessionBeanRemote, OutletSessionBeanRemote outletSessionBeanRemote, PartnerCustomerSessionBeanRemote partnerCustomerSessionBeanRemote) {
         this();
-        this.customerSessionBeanRemote = customerSessionBeanRemote;
+        this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.rentalReservationSessionBeanRemote = rentalReservationSessionBeanRemote;
         this.carModelSessionBeanRemote = carModelSessionBeanRemote;
         this.carCategorySessionBeanRemote = carCategorySessionBeanRemote;
         this.outletSessionBeanRemote = outletSessionBeanRemote;
+        this.partnerCustomerSessionBeanRemote = partnerCustomerSessionBeanRemote;
     }
 
+    
+
+    
     public void runApp() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
         while (true) {
-            System.out.println("*** Welcome to Car Rental Management System (CaRMS) Reservation Client ***");
-            System.out.println("1: Register As Customer");
-            System.out.println("2: Login");
-            System.out.println("3: Search Car");
-            System.out.println("4: Exit\n");
+            System.out.println("*** Welcome to MCR  x  Holiday Reservation System ***");
+            System.out.println("1: Partner Login");
+            System.out.println("2: Search Car");
+            System.out.println("3: Exit\n");
             response = 0;
 
-            while (response < 1 || response > 4) {
+            while (response < 1 || response > 3) {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if (response == 1) {
-                    doRegisterAsCustomer();
-                } else if (response == 2) {
                     try {
                         doLogin();
                         System.out.println("Login successful!\n");
@@ -86,84 +91,49 @@ public class MainApp {
                     } catch (InvalidLoginCredentialException ex) {
                         System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
                     }
+                } else if (response == 2) {
+                    
                 } else if (response == 3) {
-                    doSearchCar();
-                } else if (response == 4) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
-            if (response == 4) {
+            if (response == 3) {
                 break;
             }
         }
     }
-
-    private void doRegisterAsCustomer() {
-        Scanner scanner = new Scanner(System.in);
-        Customer customer = new Customer();
-
-        System.out.println("*** CaRMS Reservation Client :: Register As Customer ***\n");
-        System.out.print("Enter First Name> ");
-        String customerFirstName = scanner.nextLine().trim();
-        customer.setCustomerFirstName(customerFirstName);
-        System.out.print("Enter Last Name> ");
-        String customerLastName = scanner.nextLine().trim();
-        customer.setCustomerLastName(customerLastName);
-        System.out.print("Enter Email> ");
-        String email = scanner.nextLine().trim();
-        customer.setCustomerEmail(email);
-        System.out.print("Enter Username> ");
-        String username = scanner.nextLine().trim();
-        customer.setCustomerUsername(username);
-        System.out.print("Enter Password> ");
-        String password = scanner.nextLine().trim();
-        customer.setCustomerPassword(password);
-
-        try {
-            Long customerId = customerSessionBeanRemote.createNewCustomer(customer);
-            System.out.println("Customer account registration successful!\n");
-            System.out.print("Press <Enter> key to continue> ");
-            scanner.nextLine();
-        } catch (CustomerUsernameExistException ex) {
-            System.out.println("Customer username[" + username + "] already exists!");
-        } catch (UnknownPersistenceException ex) {
-            System.out.println("An unknown error has occurred while creating the new customer account!: " + ex.getMessage() + "\n");
-        } catch (InputDataValidationException ex) {
-            System.out.println("Data validation check failed! Input data did not satisfy 1 or more constraints!");
-        }
-    }
-
+    
     private void doLogin() throws InvalidLoginCredentialException {
         Scanner scanner = new Scanner(System.in);
         String username = "";
         String password = "";
 
-        System.out.println("*** CaRMS Reservation Client :: Login ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: Login ***\n");
         System.out.print("Enter username> ");
         username = scanner.nextLine().trim();
         System.out.print("Enter password> ");
         password = scanner.nextLine().trim();
 
         if (username.length() > 0 && password.length() > 0) {
-            currentCustomerEntity = customerSessionBeanRemote.customerLogin(username, password);
+            currentPartnerEntity = partnerSessionBeanRemote.partnerLogin(username, password);
         } else {
             throw new InvalidLoginCredentialException("Missing login credentials!");
         }
     }
-
+    
     private void menuMain() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
         while (true) {
-            System.out.println("*** CaRMS Reservation Client ***\n");
-            System.out.println("Welcome to Merlion's CaRMS, " + currentCustomerEntity.getCustomerFirstName() + " " + currentCustomerEntity.getCustomerLastName() + "!\n");
-            System.out.println("1: Search Car");
-            System.out.println("2: View Reservation Details");
-            System.out.println("3: Cancel Reservation");
-            System.out.println("4: View All My Reservations");
+            System.out.println("*** MCR  x  Holiday Reservation System ***\n");
+            System.out.println("Welcome to Holiday Reservation System, " + currentPartnerEntity.getPartnerName() + "!\n");
+            System.out.println("1: Partner Search Car");
+            System.out.println("2: Partner View Reservation Details");
+            System.out.println("3: Partner Cancel Reservation");
+            System.out.println("4: View All Partner Reservations");
             System.out.println("5: Logout\n");
             response = 0;
 
@@ -171,16 +141,16 @@ public class MainApp {
                 System.out.print("> ");
                 response = scanner.nextInt();
                 if (response == 1) {
-                    doSearchCar();
+                    doPartnerSearchCar();
                 } else if (response == 2) {
-                    doViewReservationDetails();
+                    doPartnerViewReservationDetails();
                 } else if (response == 3) {
                     System.out.print("Enter Rental Reservation ID> ");
                     Long rentalReservationId = scanner.nextLong();
                     scanner.nextLine();
-                    doCancelReservation(rentalReservationId);
+                    doPartnerCancelReservation(rentalReservationId);
                 } else if (response == 4) {
-                    doViewAllMyReservations();
+                    doViewAllPartnerReservations();
                 } else if (response == 5) {
                     break;
                 } else {
@@ -193,7 +163,7 @@ public class MainApp {
         }
     }
 
-    private void doSearchCar() {
+    private void doPartnerSearchCar() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         Boolean availableToReserve = false;
@@ -210,7 +180,7 @@ public class MainApp {
 
         SimpleDateFormat openingHours = new SimpleDateFormat("HH:mm");
 
-        System.out.println("*** CaRMS Reservation Client :: Search Car ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: Partner Search Car ***\n");
 
         try {
             System.out.print("Enter desired Pickup Date and Time (DD/MM/YYYY HH:MM)> ");
@@ -326,13 +296,13 @@ public class MainApp {
             if (availableToReserve) {
                 BigDecimal reservationAmount = carCategorySessionBeanRemote.calculateRentalFee(carCategoryId, pickupDateTime, returnDateTime);
                 System.out.println("The expected rental fee amount is $" + reservationAmount);
-                if (currentCustomerEntity == null) {
+                if (currentPartnerEntity == null) {
                     System.out.println("Please login to perform reservation-related transactions!");
                 } else {
                     System.out.print("Proceed to reserve car? ('Y' to commence reservation process)> ");
                     String reply = scanner.nextLine().trim();
                     if (reply.equals("Y")) {
-                        doReserveCar(carCategoryId, carModelId, pickupDateTime, pickupOutletId, returnDateTime, returnOutletId, reservationAmount);
+                        doPartnerReserveCar(carCategoryId, carModelId, pickupDateTime, pickupOutletId, returnDateTime, returnOutletId, reservationAmount);
                     }
                 }
             } else {
@@ -357,11 +327,11 @@ public class MainApp {
         }
     }
 
-    private void doReserveCar(Long carCategoryId, Long carModelId, Date pickupDateTime, Long pickupOutletId, Date returnDateTime, Long returnOutletId, BigDecimal reservationAmount) {
+    private void doPartnerReserveCar(Long carCategoryId, Long carModelId, Date pickupDateTime, Long pickupOutletId, Date returnDateTime, Long returnOutletId, BigDecimal reservationAmount) {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
-        System.out.println("*** CaRMS Reservation Client :: Reserve Car ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: Partner Reserve Car ***\n");
 
         RentalReservation newRentalReservation = new RentalReservation();
 
@@ -382,6 +352,20 @@ public class MainApp {
             System.out.print("Enter Credit Card Expiry Date> ");
             String creditCardExpiryDate = scanner.nextLine().trim();
             newRentalReservation.setCreditCardExpiry(creditCardExpiryDate);
+            
+            PartnerCustomer partnerCustomer = new PartnerCustomer();
+            System.out.print("Enter Partner Customer Email Address> ");
+            String partnerCustomerEmail = scanner.nextLine().trim();
+            partnerCustomer.setPartnerCustomerEmail(partnerCustomerEmail);
+            System.out.print("Enter Partner Customer First Name> ");
+            String partnerCustomerFirstName = scanner.nextLine().trim();
+            partnerCustomer.setPartnerCustomerFirstName(partnerCustomerFirstName);
+            System.out.print("Enter Partner Customer Last Name> ");
+            String partnerCustomerLastName = scanner.nextLine().trim();
+            partnerCustomer.setPartnerCustomerLastName(partnerCustomerLastName);
+            
+            partnerCustomerSessionBeanRemote.createNewCustomer(partnerCustomer, currentPartnerEntity.getPartnerId());
+            
 
             System.out.print("Make payment now? ('Y' for immediate payment)> ");
             String reply = scanner.nextLine().trim();
@@ -392,21 +376,27 @@ public class MainApp {
                 newRentalReservation.setRentalReservationIsPaid(Boolean.FALSE);
                 System.out.println("Payment for Rental Reservation is being deferred and credit card number ending " + creditCardNum.substring(creditCardNum.length() - 4) + " has been saved successfully!");
             }
-            Long newRentalReservationId = rentalReservationSessionBeanRemote.createNewRentalReservation(newRentalReservation, currentCustomerEntity.getCustomerId(), carCategoryId, carModelId, pickupOutletId, returnOutletId);
+            Long newRentalReservationId = rentalReservationSessionBeanRemote.createNewRentalReservationForPartner(newRentalReservation, currentPartnerEntity.getPartnerId(), partnerCustomer.getPartnerCustomerId(),carCategoryId, carModelId, pickupOutletId, returnOutletId);
             System.out.println("New Rental Reservation created successfully!: " + newRentalReservationId);
         } catch (InputDataValidationException ex) {
             System.out.println("Input data validation failed!");
+        } catch (PartnerNotFoundException ex) {
+            System.out.println("Partner not found!");
+        } catch (PartnerCustomerNameExistException ex) {
+            System.out.println("Partner Customer name already exists!!");
+        } catch (UnknownPersistenceException ex) {
+            System.out.println("Unknown Persistence Exception!");
         }
 
         System.out.print("Press <Enter> key to continue> ");
         scanner.nextLine();
     }
 
-    private void doCancelReservation(Long rentalReservationId) {
+    private void doPartnerCancelReservation(Long rentalReservationId) {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
-        System.out.println("*** CaRMS Reservation Client :: Cancel Reservation ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: Partner Cancel Reservation ***\n");
 
         RentalReservation rentalReservationToCancel = new RentalReservation();
 
@@ -429,11 +419,11 @@ public class MainApp {
         }
     }
 
-    private void doViewReservationDetails() {
+    private void doPartnerViewReservationDetails() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
-        System.out.println("*** CaRMS Reservation Client :: View Reservation Details ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: Partner View Reservation Details ***\n");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         RentalReservation r = new RentalReservation();
 
@@ -474,7 +464,7 @@ public class MainApp {
             System.out.print("Proceed to cancel reservation? ('Y' to cancel)> ");
             String reply = scanner.nextLine().trim();
             if (reply.equals("Y")) {
-                doCancelReservation(rentalReservationId);
+                doPartnerCancelReservation(rentalReservationId);
             } else {
                 System.out.print("Press <Enter> key to continue> ");
                 scanner.nextLine();
@@ -484,18 +474,18 @@ public class MainApp {
         }
     }
 
-    private void doViewAllMyReservations() {
+    private void doViewAllPartnerReservations() {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-        System.out.println("*** CaRMS Reservation Client :: View All My Reservations ***\n");
+        System.out.println("*** MCR  x  Holiday Reservation System :: View All Partner Reservations ***\n");
         System.out.printf("%4s%20s%25s%20s%20s%20s%15s%15s%15s\n", "ID", "Car Make", "Model Name", "Car Category",
                 "Pickup Date", "Return Date", "Rental Fee", "Paid", "Cancelled");
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------------");
 
-        List<RentalReservation> reservationList = rentalReservationSessionBeanRemote.retrieveCustomerRentalReservations(currentCustomerEntity.getCustomerId());
+        List<RentalReservation> reservationList = rentalReservationSessionBeanRemote.retrieveCustomerRentalReservations(currentPartnerEntity.getPartnerId());
 
         for (RentalReservation r : reservationList) {
             String isPaid = "Paid";
@@ -528,4 +518,10 @@ public class MainApp {
         System.out.print("Press <Enter> key to continue> ");
         scanner.nextLine();
     }
+    
+//    private static createPartnerCustomer(PartnerCustomer partnerCustomer) {
+//        HolidayReservationSystemWebService_Service holidayReservationSystemWebService_Service = new HolidayReservationSystemWebService_Service();
+//        
+//    }
+    
 }

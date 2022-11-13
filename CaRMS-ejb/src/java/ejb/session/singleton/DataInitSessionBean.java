@@ -101,9 +101,9 @@ public class DataInitSessionBean {
         try {
             Long aId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A"));
             Long bId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B"));
-            
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            Long cId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", sdf.parse("12/11/2022 08:00"), sdf.parse("12/11/2022 22:00")));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            Long cId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", sdf.parse("08:00"), sdf.parse("22:00")));
 
             Employee a1 = new Employee("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER);
             Long a1Id = employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a1, aId);
@@ -175,6 +175,8 @@ public class DataInitSessionBean {
             Date alwaysValidEndDateTime = null;
 //            Date alwaysValidStartDateTime = sdf.parse("01/01/1900 00:00");
 //            Date alwaysValidEndDateTime = sdf.parse("31/12/2999 23:59");
+
+            sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
             RentalRate stdSedanDefault = new RentalRate("Standard Sedan - Default", "Default", BigDecimal.valueOf(100), alwaysValidStartDateTime, alwaysValidEndDateTime, Boolean.TRUE, Boolean.FALSE);
             rentalRateSessionBeanLocal.createNewRentalRateJoinCarCategory(stdSedanDefault, standardSedanId);
