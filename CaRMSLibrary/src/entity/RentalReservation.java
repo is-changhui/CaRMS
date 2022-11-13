@@ -33,14 +33,30 @@ import javax.validation.constraints.NotNull;
 public class RentalReservation implements Serializable {
 
     
+
+    /**
+     * @param rentalReservationIsCompleted the rentalReservationIsCompleted to set
+     */
+    public void setRentalReservationIsCompleted(Boolean rentalReservationIsCompleted) {
+        this.rentalReservationIsCompleted = rentalReservationIsCompleted;
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rentalReservationId;
     @Column(nullable = false)
+    @NotNull
     private Boolean rentalReservationIsPaid;
     @Column(nullable = false)
+    @NotNull
     private Boolean rentalReservationIsCancelled;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean rentalReservationHasPickedUp;
+    @Column(nullable = false)
+    @NotNull
+    private Boolean rentalReservationIsCompleted;
     @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
@@ -58,66 +74,59 @@ public class RentalReservation implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String creditCardCVV;
+    @Column(nullable = false, length = 64)
+    @NotNull
+    private String creditCardExpiry;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @NotNull
-    private Date creditCardExpiry;
+    private Date rentalReservationPickupDateTime;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @NotNull
-    private Date rentalReservationPickupDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    @NotNull
-    private Date rentalReservationReturnDate;
-    
-    
+    private Date rentalReservationReturnDateTime;
+
+    @OneToOne(optional = true)
+    private CarCategory carCategory;
+
+    @OneToOne(optional = true)
+    private CarModel carModel;
+
     @OneToOne(optional = true)
     private Car car;
-    
+
     @ManyToMany
     private List<RentalRate> rentalRates;
-    
+
     @OneToOne(optional = true, mappedBy = "rentalReservation")
     private TransitDriverDispatchRecord transitDriverDispatchRecord;
-    
+
     @ManyToOne(optional = true)
     private Partner partner;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
+
+    @ManyToOne(optional = true)
+    private PartnerCustomer partnerCustomer;
+
+    @ManyToOne(optional = true)
     private Customer customer;
-    
+
     @OneToOne(optional = false)
-    private Outlet pickUpOutlet;
-    
+    private Outlet pickupOutlet;
+
     @OneToOne(optional = false)
     private Outlet returnOutlet;
-    
-    @OneToOne(optional = false)
-    private CarPickup carPickupRecord;
-    
-    @OneToOne(optional = false)
-    private CarReturn carReturnRecord;
-    
-    
-    
+
+
     public RentalReservation() {
+        rentalReservationHasPickedUp = false;
+        rentalReservationIsCompleted = false;
         rentalReservationIsCancelled = false;
         rentalRates = new ArrayList<>();
-    }
-
-    public RentalReservation(Boolean reservationIsPaid, Boolean reservationIsCancelled, BigDecimal reservationAmount, String creditCardName, String creditCardNumber, String creditCardCVV, Date creditCardExpiry, Date reservationPickupDate, Date reservationReturnDate) {
-        this();
-        this.rentalReservationIsPaid = reservationIsPaid;
-        this.rentalReservationIsCancelled = reservationIsCancelled;
-        this.rentalReservationAmount = reservationAmount;
-        this.creditCardName = creditCardName;
-        this.creditCardNumber = creditCardNumber;
-        this.creditCardCVV = creditCardCVV;
-        this.creditCardExpiry = creditCardExpiry;
-        this.rentalReservationPickupDate = reservationPickupDate;
-        this.rentalReservationReturnDate = reservationReturnDate;
+        rentalReservationAmount = BigDecimal.valueOf(0.00);
+        creditCardName = "";
+        creditCardNumber = "";
+        creditCardCVV = "";
+        creditCardExpiry = "";
     }
 
     public Long getRentalReservationId() {
@@ -127,7 +136,7 @@ public class RentalReservation implements Serializable {
     public void setRentalReservationId(Long rentalReservationId) {
         this.rentalReservationId = rentalReservationId;
     }
-    
+
     /**
      * @return the rentalReservationIsPaid
      */
@@ -150,10 +159,32 @@ public class RentalReservation implements Serializable {
     }
 
     /**
-     * @param rentalReservationIsCancelled the rentalReservationIsCancelled to set
+     * @param rentalReservationIsCancelled the rentalReservationIsCancelled to
+     * set
      */
     public void setRentalReservationIsCancelled(Boolean rentalReservationIsCancelled) {
         this.rentalReservationIsCancelled = rentalReservationIsCancelled;
+    }
+
+    /**
+     * @return the rentalReservationHasPickedUp
+     */
+    public Boolean getRentalReservationHasPickedUp() {
+        return rentalReservationHasPickedUp;
+    }
+
+    /**
+     * @param rentalReservationHasPickedUp the rentalReservationHasPickedUp to set
+     */
+    public void setRentalReservationHasPickedUp(Boolean rentalReservationHasPickedUp) {
+        this.rentalReservationHasPickedUp = rentalReservationHasPickedUp;
+    }
+    
+    /**
+     * @return the rentalReservationIsCompleted
+     */
+    public Boolean getRentalReservationIsCompleted() {
+        return rentalReservationIsCompleted;
     }
 
     /**
@@ -215,43 +246,45 @@ public class RentalReservation implements Serializable {
     /**
      * @return the creditCardExpiry
      */
-    public Date getCreditCardExpiry() {
+    public String getCreditCardExpiry() {
         return creditCardExpiry;
     }
 
     /**
      * @param creditCardExpiry the creditCardExpiry to set
      */
-    public void setCreditCardExpiry(Date creditCardExpiry) {
+    public void setCreditCardExpiry(String creditCardExpiry) {
         this.creditCardExpiry = creditCardExpiry;
     }
 
     /**
-     * @return the rentalReservationPickupDate
+     * @return the rentalReservationPickupDateTime
      */
-    public Date getRentalReservationPickupDate() {
-        return rentalReservationPickupDate;
+    public Date getRentalReservationPickupDateTime() {
+        return rentalReservationPickupDateTime;
     }
 
     /**
-     * @param rentalReservationPickupDate the rentalReservationPickupDate to set
+     * @param rentalReservationPickupDateTime the
+     * rentalReservationPickupDateTime to set
      */
-    public void setRentalReservationPickupDate(Date rentalReservationPickupDate) {
-        this.rentalReservationPickupDate = rentalReservationPickupDate;
+    public void setRentalReservationPickupDateTime(Date rentalReservationPickupDateTime) {
+        this.rentalReservationPickupDateTime = rentalReservationPickupDateTime;
     }
 
     /**
-     * @return the rentalReservationReturnDate
+     * @return the rentalReservationReturnDateTime
      */
-    public Date getRentalReservationReturnDate() {
-        return rentalReservationReturnDate;
+    public Date getRentalReservationReturnDateTime() {
+        return rentalReservationReturnDateTime;
     }
 
     /**
-     * @param rentalReservationReturnDate the rentalReservationReturnDate to set
+     * @param rentalReservationReturnDateTime the
+     * rentalReservationReturnDateTime to set
      */
-    public void setRentalReservationReturnDate(Date rentalReservationReturnDate) {
-        this.rentalReservationReturnDate = rentalReservationReturnDate;
+    public void setRentalReservationReturnDateTime(Date rentalReservationReturnDateTime) {
+        this.rentalReservationReturnDateTime = rentalReservationReturnDateTime;
     }
 
     @Override
@@ -278,5 +311,103 @@ public class RentalReservation implements Serializable {
     public String toString() {
         return "entity.RentalReservation[ id=" + rentalReservationId + " ]";
     }
-    
+
+    /**
+     * @return the carCategory
+     */
+    public CarCategory getCarCategory() {
+        return carCategory;
+    }
+
+    /**
+     * @param carCategory the carCategory to set
+     */
+    public void setCarCategory(CarCategory carCategory) {
+        this.carCategory = carCategory;
+    }
+
+    /**
+     * @return the carModel
+     */
+    public CarModel getCarModel() {
+        return carModel;
+    }
+
+    /**
+     * @param carModel the carModel to set
+     */
+    public void setCarModel(CarModel carModel) {
+        this.carModel = carModel;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public List<RentalRate> getRentalRates() {
+        return rentalRates;
+    }
+
+    public void setRentalRates(List<RentalRate> rentalRates) {
+        this.rentalRates = rentalRates;
+    }
+
+    public TransitDriverDispatchRecord getTransitDriverDispatchRecord() {
+        return transitDriverDispatchRecord;
+    }
+
+    public void setTransitDriverDispatchRecord(TransitDriverDispatchRecord transitDriverDispatchRecord) {
+        this.transitDriverDispatchRecord = transitDriverDispatchRecord;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
+    }
+
+    public PartnerCustomer getPartnerCustomer() {
+        return partnerCustomer;
+    }
+
+    public void setPartnerCustomer(PartnerCustomer partnerCustomer) {
+        this.partnerCustomer = partnerCustomer;
+    }
+
+    public Outlet getPickupOutlet() {
+        return pickupOutlet;
+    }
+
+    public void setPickupOutlet(Outlet pickupOutlet) {
+        this.pickupOutlet = pickupOutlet;
+    }
+
+    public Outlet getReturnOutlet() {
+        return returnOutlet;
+    }
+
+    public void setReturnOutlet(Outlet returnOutlet) {
+        this.returnOutlet = returnOutlet;
+    }
+
+    /**
+     * @return the customer
+     */
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    /**
+     * @param customer the customer to set
+     */
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
 }

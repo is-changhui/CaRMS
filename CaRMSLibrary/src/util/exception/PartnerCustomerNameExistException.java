@@ -9,22 +9,22 @@ package util.exception;
  *
  * @author Darie
  */
-public class CarReturnRecordExistException extends Exception {
+public class PartnerCustomerNameExistException extends Exception {
 
     /**
-     * Creates a new instance of <code>CarReturnRecordExistException</code>
+     * Creates a new instance of <code>PartnerCustomerNameExistException</code>
      * without detail message.
      */
-    public CarReturnRecordExistException() {
+    public PartnerCustomerNameExistException() {
     }
 
     /**
-     * Constructs an instance of <code>CarReturnRecordExistException</code> with
-     * the specified detail message.
+     * Constructs an instance of <code>PartnerCustomerNameExistException</code>
+     * with the specified detail message.
      *
      * @param msg the detail message.
      */
-    public CarReturnRecordExistException(String msg) {
+    public PartnerCustomerNameExistException(String msg) {
         super(msg);
     }
 }

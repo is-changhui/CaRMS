@@ -6,10 +6,12 @@
 package ejb.session.stateless;
 
 import entity.RentalRate;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import util.exception.CarCategoryNotFoundException;
 import util.exception.DeleteRentalRateRecordException;
+import util.exception.EmptyRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RentalRateRecordExistException;
 import util.exception.RentalRateRecordNotFoundException;
@@ -22,7 +24,7 @@ import util.exception.UpdateRentalRateRecordException;
  */
 @Remote
 public interface RentalRateSessionBeanRemote {
-    
+
     public Long createNewRentalRate(RentalRate newRentalRate) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException;
 
     public List<RentalRate> retrieveAllRentalRates();
@@ -34,6 +36,8 @@ public interface RentalRateSessionBeanRemote {
     public void updateRentalRate(RentalRate rentalRate) throws UpdateRentalRateRecordException, RentalRateRecordNotFoundException;
 
     public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException, DeleteRentalRateRecordException;
-    
+
     public Long createNewRentalRateJoinCarCategory(RentalRate newRentalRate, Long carCategoryId) throws RentalRateRecordExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException;
+
+    public RentalRate retrieveLowestRentalRateForTheDay(Long carCategoryId, Date currentCheckingDate) throws EmptyRentalRateException;
 }

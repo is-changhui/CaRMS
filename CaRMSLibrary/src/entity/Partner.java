@@ -42,7 +42,7 @@ public class Partner implements Serializable {
     private String partnerPassword;
     
     @OneToMany(mappedBy = "partner")
-    private List<Customer> partnerCustomers;
+    private List<PartnerCustomer> partnerCustomers;
     
     @OneToMany(mappedBy = "partner")
     private List<RentalReservation> partnerRentalReservations;
@@ -113,14 +113,14 @@ public class Partner implements Serializable {
     /**
      * @return the partnerCustomers
      */
-    public List<Customer> getPartnerCustomers() {
+    public List<PartnerCustomer> getPartnerCustomers() {
         return partnerCustomers;
     }
 
     /**
      * @param partnerCustomers the partnerCustomers to set
      */
-    public void setPartnerCustomers(List<Customer> partnerCustomers) {
+    public void setPartnerCustomers(List<PartnerCustomer> partnerCustomers) {
         this.partnerCustomers = partnerCustomers;
     }
 

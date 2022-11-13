@@ -9,22 +9,22 @@ package util.exception;
  *
  * @author Darie
  */
-public class CarPickupRecordExistException extends Exception {
+public class RentalReservationNotFoundException extends Exception {
 
     /**
-     * Creates a new instance of <code>CarPickupRecordExistException</code>
+     * Creates a new instance of <code>RentalReservationNotFoundException</code>
      * without detail message.
      */
-    public CarPickupRecordExistException() {
+    public RentalReservationNotFoundException() {
     }
 
     /**
-     * Constructs an instance of <code>CarPickupRecordExistException</code> with
-     * the specified detail message.
+     * Constructs an instance of <code>RentalReservationNotFoundException</code>
+     * with the specified detail message.
      *
      * @param msg the detail message.
      */
-    public CarPickupRecordExistException(String msg) {
+    public RentalReservationNotFoundException(String msg) {
         super(msg);
     }
 }

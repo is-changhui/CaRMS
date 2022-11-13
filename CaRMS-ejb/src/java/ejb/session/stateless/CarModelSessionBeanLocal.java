@@ -13,6 +13,7 @@ import util.exception.CarModelExistException;
 import util.exception.CarModelNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateCarModelException;
 
 /**
  *
@@ -25,8 +26,14 @@ public interface CarModelSessionBeanLocal {
 
     public List<CarModel> retrieveAllCarModels();
 
-    public CarModel retrieveCarModelByCarModelId(Long carModelId) throws CarModelNotFoundException;
+    public CarModel retrieveCarModelById(Long carModelId) throws CarModelNotFoundException;
 
     public Long createNewCarModelJoinCarCategory(CarModel newCarModel, Long carCategoryId) throws CarModelExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException;
+
+    public CarModel retrieveCarModelByModelName(String carModelName) throws CarModelNotFoundException;
+
+    public void updateCarModel(CarModel carModel, Long updatedCarCategoryId) throws CarModelNotFoundException, CarCategoryNotFoundException, InputDataValidationException;
+
+    public void deleteCarModel(Long carModelId) throws CarModelNotFoundException;
 
 }

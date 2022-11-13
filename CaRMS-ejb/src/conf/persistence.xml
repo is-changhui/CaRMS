@@ -5,8 +5,6 @@
     <class>entity.Car</class>
     <class>entity.CarCategory</class>
     <class>entity.CarModel</class>
-    <class>entity.CarPickup</class>
-    <class>entity.CarReturn</class>
     <class>entity.Customer</class>
     <class>entity.Employee</class>
     <class>entity.Outlet</class>
@@ -14,6 +12,7 @@
     <class>entity.RentalRate</class>
     <class>entity.RentalReservation</class>
     <class>entity.TransitDriverDispatchRecord</class>
+    <class>entity.PartnerCustomer</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>

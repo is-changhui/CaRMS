@@ -13,6 +13,8 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -20,9 +22,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.exception.CarCategoryNotFoundException;
 import util.exception.CarExistException;
-import util.exception.CarModelExistException;
 import util.exception.CarModelNotEnabledException;
 import util.exception.CarModelNotFoundException;
 import util.exception.CarNotFoundException;
@@ -90,7 +90,7 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
 
             if (constraintViolations.isEmpty()) {
                 try {
-                    CarModel carModel = carModelSessionBeanLocal.retrieveCarModelByCarModelId(carModelId);
+                    CarModel carModel = carModelSessionBeanLocal.retrieveCarModelById(carModelId);
                     Outlet outlet = outletSessionBeanLocal.retrieveOutletById(outletId);
                     // carModel (1) ------ car (1..*)
                     // outlet (0..1) ------ car (0..*)
@@ -130,7 +130,8 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
 
     @Override
     public List<Car> retrieveAllCars() {
-        Query query = em.createQuery("SELECT e FROM Car e");
+        // MCUC19.2: ascending order by car category, make, model, license plate
+        Query query = em.createQuery("SELECT c FROM Car c ORDER BY c.carModel.carCategory.categoryName, c.carModel.carMake, c.carModel.modelName, c.carLicensePlate");
         return query.getResultList();
     }
 
@@ -144,18 +145,70 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
             throw new CarNotFoundException("Car ID [" + carId + "] does not exist!");
         }
     }
+    
+    @Override
+    public Car retrieveCarByLicensePlate(String licensePlate) throws CarNotFoundException {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.carLicensePlate = :inLicensePlate");
+        query.setParameter("inLicensePlate", licensePlate);
 
-//    @Override
-//    public Car retrieveCarByModel(String model) throws CarNotFoundException {
-//        Query query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeUsername = :inEmployeeUsername");
-//        query.setParameter("inEmployeeUsername", username);
-//        
-//        try {
-//            return (Employee)query.getSingleResult();
-//        } catch (NoResultException | NonUniqueResultException ex) {
-//            throw new EmployeeNotFoundException("Employee Username " + username + " does not exist!");
-//        }
-//    }
+        try {
+            return (Car) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new CarNotFoundException("Car license plate number [" + licensePlate + "] does not exist!");
+        }
+    }
+    
+    @Override
+    public List<Car> retrieveCarsByCarCategoryId(Long carCategoryId) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.carModel.carCategory.categoryId = :inCarCategoryId");
+        query.setParameter("inCarCategoryId", carCategoryId);
+
+        return query.getResultList();
+    }
+    
+    
+    @Override
+    public List<Car> retrieveCarsByCarModelId(Long modelId) {
+        Query query = em.createQuery("SELECT c FROM Car c WHERE c.carModel.modelId = :inCarModelId");
+        query.setParameter("inCarModelId", modelId);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public void updateCar(Car car) throws InputDataValidationException, CarNotFoundException {
+        if (car != null && car.getCarId() != null) {
+
+            Set<ConstraintViolation<Car>> constraintViolations = validator.validate(car);
+
+            if (constraintViolations.isEmpty()) {
+                // here we only allow basic characteristics of car to be changed and not car model since it should be fixed
+                Car carToUpdate = retrieveCarByCarId(car.getCarId());
+                carToUpdate.setCarLicensePlate(car.getCarLicensePlate());
+                carToUpdate.setCarColour(car.getCarColour());
+            } else {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        } else {
+            throw new CarNotFoundException("Car ID [" + car.getCarId() + "] does not exist!");
+        }
+    }
+
+    @Override
+    public void deleteCar(Long carId) throws CarNotFoundException {
+        try {
+            Car carToRemove = retrieveCarByCarId(carId);
+            if (carToRemove.getRentalReservation() == null) {
+                em.remove(carToRemove);
+            } else {
+                carToRemove.setCarIsEnabled(Boolean.FALSE);
+                carToRemove.setOutlet(null);
+            }
+        } catch (CarNotFoundException ex) {
+            throw new CarNotFoundException("Car ID [" + carId + "] cannot be found!");
+        }
+    }
+
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Car>> constraintViolations) {
         String msg = "Input data validation error!:";
 
@@ -165,10 +218,5 @@ public class CarSessionBean implements CarSessionBeanRemote, CarSessionBeanLocal
 
         return msg;
     }
-//    @Override
-//    public Long createNewCar(Car newCar) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//    
-//    
+
 }

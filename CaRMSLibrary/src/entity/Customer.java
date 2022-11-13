@@ -24,7 +24,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Customer implements Serializable {
 
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +35,11 @@ public class Customer implements Serializable {
     @Column(nullable = false, length = 32)
     @NotNull
 //    @Size(min = 8, max = 32)
-    private String customerMobileNum;
+    private String customerFirstName;
+    @Column(nullable = false, length = 32)
+    @NotNull
+//    @Size(min = 8, max = 32)
+    private String customerLastName;
     @Column(nullable = false, unique = true, length = 32)
     @NotNull
 //    @Size(min = 8, max = 32)
@@ -45,118 +48,21 @@ public class Customer implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String customerPassword;
-    
-    
+
     @OneToMany(mappedBy = "customer")
     private List<RentalReservation> rentalReservations;
-    
-    @ManyToOne(optional = true)
-    private Partner partner;
 
     
     public Customer() {
-        rentalReservations = new ArrayList<>();
     }
 
-    public Customer(String customerEmail, String customerMobileNum, String customerUsername, String customerPassword) {
-        
+    public Customer(String customerEmail, String customerFirstName, String customerLastName, String customerUsername, String customerPassword) {
         this();
         this.customerEmail = customerEmail;
-        this.customerMobileNum = customerMobileNum;
+        this.customerFirstName = customerFirstName;
+        this.customerLastName = customerLastName;
         this.customerUsername = customerUsername;
         this.customerPassword = customerPassword;
-    }
-    
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-    
-    /**
-     * @return the customerEmail
-     */
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    /**
-     * @param customerEmail the customerEmail to set
-     */
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    /**
-     * @return the customerMobileNum
-     */
-    public String getCustomerMobileNum() {
-        return customerMobileNum;
-    }
-
-    /**
-     * @param customerMobileNum the customerMobileNum to set
-     */
-    public void setCustomerMobileNum(String customerMobileNum) {
-        this.customerMobileNum = customerMobileNum;
-    }
-
-    /**
-     * @return the customerUsername
-     */
-    public String getCustomerUsername() {
-        return customerUsername;
-    }
-
-    /**
-     * @param customerUsername the customerUsername to set
-     */
-    public void setCustomerUsername(String customerUsername) {
-        this.customerUsername = customerUsername;
-    }
-
-    /**
-     * @return the customerPassword
-     */
-    public String getCustomerPassword() {
-        return customerPassword;
-    }
-
-    /**
-     * @param customerPassword the customerPassword to set
-     */
-    public void setCustomerPassword(String customerPassword) {
-        this.customerPassword = customerPassword;
-    }
-    
-    /**
-     * @return the rentalReservations
-     */
-    public List<RentalReservation> getRentalReservations() {
-        return rentalReservations;
-    }
-
-    /**
-     * @param rentalReservations the rentalReservations to set
-     */
-    public void setRentalReservations(List<RentalReservation> rentalReservations) {
-        this.rentalReservations = rentalReservations;
-    }
-
-    /**
-     * @return the partner
-     */
-    public Partner getPartner() {
-        return partner;
-    }
-
-    /**
-     * @param partner the partner to set
-     */
-    public void setPartner(Partner partner) {
-        this.partner = partner;
     }
 
     @Override
@@ -183,5 +89,66 @@ public class Customer implements Serializable {
     public String toString() {
         return "entity.Customer[ id=" + customerId + " ]";
     }
-    
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
+    public String getCustomerUsername() {
+        return customerUsername;
+    }
+
+    public void setCustomerUsername(String customerUsername) {
+        this.customerUsername = customerUsername;
+    }
+
+    public String getCustomerPassword() {
+        return customerPassword;
+    }
+
+    public void setCustomerPassword(String customerPassword) {
+        this.customerPassword = customerPassword;
+    }
+
+    public String getCustomerFirstName() {
+        return customerFirstName;
+    }
+
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
+    }
+
+    public String getCustomerLastName() {
+        return customerLastName;
+    }
+
+    public void setCustomerLastName(String customerLastName) {
+        this.customerLastName = customerLastName;
+    }
+
+    /**
+     * @return the rentalReservations
+     */
+    public List<RentalReservation> getRentalReservations() {
+        return rentalReservations;
+    }
+
+    /**
+     * @param rentalReservations the rentalReservations to set
+     */
+    public void setRentalReservations(List<RentalReservation> rentalReservations) {
+        this.rentalReservations = rentalReservations;
+    }
 }

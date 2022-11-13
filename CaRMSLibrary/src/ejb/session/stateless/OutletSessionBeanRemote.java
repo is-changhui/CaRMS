@@ -29,4 +29,5 @@ public interface OutletSessionBeanRemote {
     
     public void updateOutlet(Outlet outlet) throws OutletNotFoundException, UpdateOutletException, InputDataValidationException;
     
+    public Outlet retrieveOutletByName(String outletName) throws OutletNotFoundException;
 }

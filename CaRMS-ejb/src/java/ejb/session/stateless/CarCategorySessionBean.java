@@ -6,8 +6,17 @@
 package ejb.session.stateless;
 
 import entity.CarCategory;
+import entity.RentalRate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,6 +30,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CarCategoryExistException;
 import util.exception.CarCategoryNotFoundException;
+import util.exception.EmptyRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
 
@@ -31,25 +41,26 @@ import util.exception.UnknownPersistenceException;
 @Stateless
 public class CarCategorySessionBean implements CarCategorySessionBeanRemote, CarCategorySessionBeanLocal {
 
+    @EJB
+    private RentalRateSessionBeanLocal rentalRateSessionBeanLocal;
+
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
-    
+
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
-    
     public CarCategorySessionBean() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
         validator = validatorFactory.getValidator();
     }
-    
+
     @Override
     public Long createNewCarCategory(CarCategory newCarCategory) throws CarCategoryExistException, UnknownPersistenceException, InputDataValidationException {
-        Set<ConstraintViolation<CarCategory>>constraintViolations = validator.validate(newCarCategory);
-        
+        Set<ConstraintViolation<CarCategory>> constraintViolations = validator.validate(newCarCategory);
+
         if (constraintViolations.isEmpty()) {
             try {
                 em.persist(newCarCategory);
@@ -70,28 +81,24 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
-    
-    
-    
+
     @Override
     public List<CarCategory> retrieveAllCarCategories() {
         Query query = em.createQuery("SELECT c FROM CarCategory c");
         return query.getResultList();
     }
-    
-    
-    
+
     @Override
     public CarCategory retrieveCarCategoryById(Long carCategoryId) throws CarCategoryNotFoundException {
         CarCategory carCategoryEntity = em.find(CarCategory.class, carCategoryId);
-        
+
         if (carCategoryEntity != null) {
             return carCategoryEntity;
         } else {
             throw new CarCategoryNotFoundException("Car Category ID [" + carCategoryId + "] does not exist!");
         }
     }
-    
+
     @Override
     public CarCategory retrieveCarCategoryByName(String carCategoryName) throws CarCategoryNotFoundException {
         Query query = em.createQuery("SELECT c FROM CarCategory c WHERE c.categoryName = :incarCategoryName");
@@ -103,14 +110,35 @@ public class CarCategorySessionBean implements CarCategorySessionBeanRemote, Car
             throw new CarCategoryNotFoundException("Car Category name [" + carCategoryName + "] does not exist!");
         }
     }
-    
-    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<CarCategory>>constraintViolations) {
+
+    @Override
+    public BigDecimal calculateRentalFee(Long carCategoryId, Date pickupDateTime, Date returnDateTime) throws EmptyRentalRateException {
+        BigDecimal reservationAmount = new BigDecimal(0);
+        returnDateTime.setHours(pickupDateTime.getHours());
+        try {
+            LocalDateTime pickupTemporal = pickupDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime returnTemporal = returnDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            Long rentalPeriod = ChronoUnit.DAYS.between(pickupTemporal, returnTemporal);
+            GregorianCalendar calendarTraversal = new GregorianCalendar(pickupDateTime.getYear() + 1900, pickupDateTime.getMonth(), pickupDateTime.getDate());
+            for (int i = 1; i <= rentalPeriod; i++) {
+                RentalRate lowestRentalRate = rentalRateSessionBeanLocal.retrieveLowestRentalRateForTheDay(carCategoryId, calendarTraversal.getTime());
+                calendarTraversal.add(Calendar.DATE, 1);
+                BigDecimal dailyLowestRentalRate = lowestRentalRate.getRentalDailyRate();
+                reservationAmount = reservationAmount.add(dailyLowestRentalRate);
+            }
+            return reservationAmount;
+        } catch (EmptyRentalRateException ex) {
+            throw new EmptyRentalRateException("There are no rental rates available for the day!");
+        }
+    }
+
+    private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<CarCategory>> constraintViolations) {
         String msg = "Input data validation error!:";
-            
-        for (ConstraintViolation constraintViolation:constraintViolations) {
+
+        for (ConstraintViolation constraintViolation : constraintViolations) {
             msg += "\n\t" + constraintViolation.getPropertyPath() + " - " + constraintViolation.getInvalidValue() + "; " + constraintViolation.getMessage();
         }
-        
+
         return msg;
     }
 }

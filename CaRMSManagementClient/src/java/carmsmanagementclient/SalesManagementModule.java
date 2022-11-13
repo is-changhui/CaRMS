@@ -10,8 +10,11 @@ import ejb.session.stateless.CarModelSessionBeanRemote;
 import ejb.session.stateless.CarSessionBeanRemote;
 import ejb.session.stateless.OutletSessionBeanRemote;
 import ejb.session.stateless.RentalRateSessionBeanRemote;
+import entity.Car;
 import entity.CarCategory;
+import entity.CarModel;
 import entity.Employee;
+import entity.Outlet;
 import entity.RentalRate;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -21,10 +24,16 @@ import java.util.List;
 import java.util.Scanner;
 import util.enumeration.EmployeeAccessRightEnum;
 import util.exception.CarCategoryNotFoundException;
+import util.exception.CarExistException;
+import util.exception.CarModelExistException;
+import util.exception.CarModelNotEnabledException;
+import util.exception.CarModelNotFoundException;
+import util.exception.CarNotFoundException;
 import util.exception.DeleteRentalRateRecordException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidRentalRateValidityPeriodException;
+import util.exception.OutletNotFoundException;
 import util.exception.RentalRateRecordExistException;
 import util.exception.RentalRateRecordNotFoundException;
 import util.exception.UnknownPersistenceException;
@@ -260,13 +269,15 @@ public class SalesManagementModule {
         } catch (ParseException ex) {
             System.out.println("Invalid start and/or date time format!");
         }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewAllRentalRates() {
         System.out.println("*** CaRMS :: Sales :: View All Rental Rates ***\n");
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
         List<RentalRate> rentalRateList = rentalRateSessionBeanRemote.retrieveAllRentalRates();
 
         for (RentalRate r : rentalRateList) {
@@ -290,6 +301,9 @@ public class SalesManagementModule {
             }
             System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", r.getRentalRateId(), r.getRentalRateName(), r.getCarCategory().getCategoryName(), r.getRentalRateType(), r.getRentalDailyRate(), startDateTime, endDateTime, isEnabled, isUsed);
         }
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewRentalRateDetails() {
@@ -300,7 +314,7 @@ public class SalesManagementModule {
         String rentalRateName = scanner.nextLine().trim();
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
         try {
             RentalRate r = rentalRateSessionBeanRemote.retrieveRentalRateByName(rentalRateName);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -325,6 +339,8 @@ public class SalesManagementModule {
         } catch (RentalRateRecordNotFoundException ex) {
             System.out.println("An error has occurred while creating the new rental rate!: The record is not found!\n");
         }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doUpdateRentalRate() {
@@ -336,7 +352,7 @@ public class SalesManagementModule {
         RentalRate r = new RentalRate();
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
         try {
             r = rentalRateSessionBeanRemote.retrieveRentalRateByName(rentalRateName);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -432,35 +448,38 @@ public class SalesManagementModule {
             }
             rentalRateSessionBeanRemote.updateRentalRate(updatedRentalRate);
             System.out.println("Rental rate updated successfully!: " + updatedRentalRate.getRentalRateId() + "\n");
-            System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-            String isEnabled = "Enabled";
-            if (!updatedRentalRate.getIsEnabled()) {
-                isEnabled = "Disabled";
-            }
-            String isUsed = "Used";
-            if (!updatedRentalRate.getIsUsed()) {
-                isUsed = "Not Used";
-            }
-            String startDateTime = "Always valid";
-            if (updatedRentalRate.getRentalRateStartDateTime() != null) {
-                startDateTime = sdf.format(updatedRentalRate.getRentalRateStartDateTime());
-            }
-            String endDateTime = "Always valid";
-            if (updatedRentalRate.getRentalRateEndDateTime() != null) {
-                endDateTime = sdf.format(updatedRentalRate.getRentalRateEndDateTime());
-            }
-            System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", updatedRentalRate.getRentalRateId(), updatedRentalRate.getRentalRateName(), updatedRentalRate.getCarCategory().getCategoryName(), updatedRentalRate.getRentalRateType(), updatedRentalRate.getRentalDailyRate(), sdf.format(updatedRentalRate.getRentalRateStartDateTime()), sdf.format(updatedRentalRate.getRentalRateEndDateTime()), isEnabled, isUsed);
+//            System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
+//            System.out.println("-------------------------------------------------------------------------------------------------------------");
+//            String isEnabled = "Enabled";
+//            if (!updatedRentalRate.getIsEnabled()) {
+//                isEnabled = "Disabled";
+//            }
+//            String isUsed = "Used";
+//            if (!updatedRentalRate.getIsUsed()) {
+//                isUsed = "Not Used";
+//            }
+//            String startDateTime = "Always valid";
+//            if (updatedRentalRate.getRentalRateStartDateTime() != null) {
+//                startDateTime = sdf.format(updatedRentalRate.getRentalRateStartDateTime());
+//            }
+//            String endDateTime = "Always valid";
+//            if (updatedRentalRate.getRentalRateEndDateTime() != null) {
+//                endDateTime = sdf.format(updatedRentalRate.getRentalRateEndDateTime());
+//            }
+//            System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", updatedRentalRate.getRentalRateId(), updatedRentalRate.getRentalRateName(), updatedRentalRate.getCarCategory().getCategoryName(), updatedRentalRate.getRentalRateType(), updatedRentalRate.getRentalDailyRate(), sdf.format(updatedRentalRate.getRentalRateStartDateTime()), sdf.format(updatedRentalRate.getRentalRateEndDateTime()), isEnabled, isUsed);
         } catch (CarCategoryNotFoundException ex) {
             System.out.println("An error has occurred while retrieving car category!: The record is not found!\n");
         } catch (InvalidRentalRateValidityPeriodException ex) {
             System.out.println("Invalid rental rate validity period: End date cannot be before start date!\n");
         } catch (ParseException ex) {
-            System.out.println("Invalid start and/or date time format!");
+            System.out.println("Invalid start and/or end date time format!");
         } catch (UpdateRentalRateRecordException ex) {
             System.out.println("Name of rental rate record to be updated does not match the existing record!");
         } catch (RentalRateRecordNotFoundException ex) {
             System.out.println("Rental Rate ID [" + updatedRentalRate.getRentalRateId() + "] does not exist!");
         }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doDeleteRentalRate() {
@@ -470,10 +489,9 @@ public class SalesManagementModule {
         System.out.print("Enter Rental Rate Name> ");
         String rentalRateName = scanner.nextLine().trim();
         RentalRate r = new RentalRate();
-        Long rId = r.getRentalRateId();
 
         System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", "ID", "Rate Name", "Car Category", "Rate Type", "Rate Per Day", "Start Date", "End Date", "Is Enabled", "Is Used");
-
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
         try {
             r = rentalRateSessionBeanRemote.retrieveRentalRateByName(rentalRateName);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -496,60 +514,295 @@ public class SalesManagementModule {
             }
             System.out.printf("%4s%35s%20s%15s%15s%20s%20s%15s%15s\n", r.getRentalRateId(), r.getRentalRateName(), r.getCarCategory().getCategoryName(), r.getRentalRateType(), r.getRentalDailyRate(), startDateTime, endDateTime, isEnabled, isUsed);
             rentalRateSessionBeanRemote.deleteRentalRate(r.getRentalRateId());
-            System.out.println("Rental rate deleted successfully!: " + rId + "\n");
+            System.out.println("Rental rate deleted successfully!: " + rentalRateName + "\n");
         } catch (RentalRateRecordNotFoundException ex) {
             System.out.println("An error has occurred while creating the new rental rate!: The record is not found!\n");
         } catch (DeleteRentalRateRecordException ex) {
-            System.out.println("Rental Rate ID [" + rId + "] does not exist!\n");
+            System.out.println("Rental Rate name [" + rentalRateName + "] does not exist!\n");
         }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doCreateNewModel() {
+        Scanner scanner = new Scanner(System.in);
+        CarModel newCarModel = new CarModel();
 
+        System.out.println("*** CaRMS :: Operations :: Create New Model ***\n");
+        System.out.print("Enter Car Make> ");
+        newCarModel.setCarMake(scanner.nextLine().trim());
+        System.out.print("Enter Car Model Name> ");
+        newCarModel.setModelName(scanner.nextLine().trim());
+        System.out.print("Enter Car Category Name> ");
+        String carCategoryName = scanner.nextLine().trim();
+
+        try {
+            CarCategory carCategory = carCategorySessionBeanRemote.retrieveCarCategoryByName(carCategoryName);
+            newCarModel.setCarCategory(carCategory);
+            Long newCarModelId = carModelSessionBeanRemote.createNewCarModelJoinCarCategory(newCarModel, carCategory.getCategoryId());
+            System.out.println("New car model created successfully!: " + newCarModelId + "\n");
+        } catch (CarCategoryNotFoundException ex) {
+            System.out.println("Car Category name [" + carCategoryName + "] cannot be found!");
+        } catch (CarModelExistException ex) {
+            System.out.println("An error has occurred while creating the new car model!: The record already exist!\n");
+        } catch (UnknownPersistenceException ex) {
+            System.out.println("An unknown error has occurred while creating the new car model!: " + ex.getMessage() + "\n");
+        } catch (InputDataValidationException ex) {
+            System.out.println("Data validation check failed! Input data did not satisfy 1 or more constraints!");
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewAllModels() {
+        Scanner scanner = new Scanner(System.in);
+        CarModel newCarModel = new CarModel();
 
+        System.out.println("*** CaRMS :: Operations :: View All Models ***\n");
+
+        System.out.printf("%4s%30s%30s%35s%15s\n", "ID", "Car Make", "Model Name", "Car Category", "Is Enabled");
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
+
+        List<CarModel> carModelList = carModelSessionBeanRemote.retrieveAllCarModels();
+
+        for (CarModel cm : carModelList) {
+            String isEnabled = "Enabled";
+            if (!cm.isModelIsEnabled()) {
+                isEnabled = "Disabled";
+            }
+            System.out.printf("%4s%30s%30s%35s%15s\n", cm.getModelId(), cm.getCarMake(), cm.getModelName(), cm.getCarCategory().getCategoryName(), isEnabled);
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doUpdateModel() {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
+        System.out.println("*** CaRMS :: Operations :: Update Model ***\n");
 
+        CarModel updatedCarModel = new CarModel();
+        System.out.println("To update, key in the new details below::");
+        System.out.print("Enter Car Model ID> ");
+        updatedCarModel.setModelId(scanner.nextLong());
+        scanner.nextLine();
+        System.out.print("Enter Car Make> ");
+        updatedCarModel.setCarMake(scanner.nextLine().trim());
+        System.out.print("Enter Car Model Name> ");
+        updatedCarModel.setModelName(scanner.nextLine().trim());
+        System.out.print("Enter Car Category ID (1: Standard Sedan, 2: Family Sedan, 3: Luxury Sedan, 4: SUV and Minivan)> ");
+        Long updatedCarCategoryId = scanner.nextLong();
+        try {
+            carModelSessionBeanRemote.updateCarModel(updatedCarModel, updatedCarCategoryId);
+            System.out.println("Car Model updated successfully!: " + updatedCarModel.getModelId() + "\n");
+        } catch (CarCategoryNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving car category!: The record is not found!\n");
+        } catch (CarModelNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving car model!: The record is not found!\n");
+        } catch (InputDataValidationException ex) {
+            System.out.println("Data validation check failed! Input data did not satisfy 1 or more constraints!");
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doDeleteModel() {
+        Scanner scanner = new Scanner(System.in);
+        Integer response = 0;
 
+        System.out.println("*** CaRMS :: Operations :: Delete Model ***\n");
+        System.out.print("Enter Car Model Name> ");
+        String carModelName = scanner.nextLine().trim();
+        CarModel cm = new CarModel();
+
+        try {
+            cm = carModelSessionBeanRemote.retrieveCarModelByModelName(carModelName);
+            carModelSessionBeanRemote.deleteCarModel(cm.getModelId());
+            System.out.println("Car model deleted successfully!: " + carModelName + "\n");
+        } catch (CarModelNotFoundException ex) {
+            System.out.println("Car Model name [" + carModelName + "] does not exist!");
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doCreateNewCar() {
+        Scanner scanner = new Scanner(System.in);
+        Car newCar = new Car();
 
+        System.out.println("*** CaRMS :: Operations :: Create New Car ***\n");
+        System.out.print("Enter Car License Plate Number> ");
+        newCar.setCarLicensePlate(scanner.nextLine().trim());
+        System.out.print("Enter Car Make> ");
+        String carMake = scanner.nextLine().trim();
+        System.out.print("Enter Car Model> ");
+        String carModelName = scanner.nextLine().trim();
+        System.out.print("Enter Car Colour> ");
+        newCar.setCarColour(scanner.nextLine().trim());
+        System.out.print("Enter Car Status> ");
+        newCar.setCarStatus(scanner.nextLine().trim());
+        System.out.print("Enter Outlet name> ");
+        String outletName = scanner.nextLine().trim();
+
+        try {
+            Outlet outlet = outletSessionBeanRemote.retrieveOutletByName(outletName);
+            CarModel carModel = carModelSessionBeanRemote.retrieveCarModelByModelName(carModelName);
+            Long newCarId = carSessionBeanRemote.createNewCarJoinCarModelJoinOutlet(newCar, carModel.getModelId(), outlet.getOutletId());
+            System.out.println("New car created successfully!: " + newCarId + "\n");
+        } catch (OutletNotFoundException ex) {
+            System.out.println("Outlet name [" + outletName + "] does not exist!");
+        } catch (CarModelNotFoundException ex) {
+            System.out.println("Car Model name [" + carModelName + "] does not exist!");
+        } catch (CarExistException ex) {
+            System.out.println("Car name already exists!");
+        } catch (UnknownPersistenceException ex) {
+            System.out.println("An unknown error has occurred while creating the new car!: " + ex.getMessage() + "\n");
+        } catch (InputDataValidationException ex) {
+            System.out.println("Data validation check failed! Input data did not satisfy 1 or more constraints!");
+        } catch (CarModelNotEnabledException ex) {
+            System.out.println("Car Model is currently disabled and not allowed to create car with it!");
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewAllCars() {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.println("*** CaRMS :: Operations :: View All Cars ***\n");
+        System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------");
+
+        List<Car> carList = carSessionBeanRemote.retrieveAllCars();
+
+        for (Car c : carList) {
+            String isEnabled = "Enabled";
+            if (!c.getCarIsEnabled()) {
+                isEnabled = "Disabled";
+            }
+            System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", c.getCarId(), c.getCarLicensePlate(), c.getCarModel().getCarMake(), c.getCarModel().getModelName(), c.getCarColour(), c.getCarStatus(), isEnabled);
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewCarDetails() {
+        Scanner scanner = new Scanner(System.in);
 
+        Integer response = 0;
+        System.out.println("*** CaRMS :: Operations :: View Car Details ***\n");
+        System.out.print("Enter Car License Plate> ");
+        String carLicensePlate = scanner.nextLine().trim();
+
+        System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        try {
+            Car car = carSessionBeanRemote.retrieveCarByLicensePlate(carLicensePlate);
+
+            String isEnabled = "Enabled";
+            if (!car.getCarIsEnabled()) {
+                isEnabled = "Disabled";
+            }
+            System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", car.getCarId(), car.getCarLicensePlate(), car.getCarModel().getCarMake(), car.getCarModel().getModelName(), car.getCarColour(),car.getCarStatus(), isEnabled);
+        } catch (CarNotFoundException ex) {
+            System.out.println("Car license plate number [" + carLicensePlate + "] does not exist!");
+        }
+
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doUpdateCar() {
+        Scanner scanner = new Scanner(System.in);
 
+        Integer response = 0;
+        System.out.println("*** CaRMS :: Operations :: Update Car ***\n");
+        System.out.print("Enter Car License Plate> ");
+        String carLicensePlate = scanner.nextLine().trim();
+
+        System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Colour", "Car Status", "Is Enabled");
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        Car car = new Car();
+        try {
+            car = carSessionBeanRemote.retrieveCarByLicensePlate(carLicensePlate);
+
+            String isEnabled = "Enabled";
+            if (!car.getCarIsEnabled()) {
+                isEnabled = "Disabled";
+            }
+            System.out.printf("%4s%30s%30s%30s%20s%20s%15s\n", car.getCarId(), car.getCarLicensePlate(), car.getCarModel().getCarMake(), car.getCarModel().getModelName(), car.getCarColour(),car.getCarStatus(), isEnabled);
+        } catch (CarNotFoundException ex) {
+            System.out.println("Car license plate number [" + carLicensePlate + "] does not exist!");
+        }
+
+//        Car updatedCar = new Car();
+        System.out.println("To update, key in the new details below::");
+//        System.out.print("Enter Car ID> ");
+//        car.setCarId(scanner.nextLong());
+//        scanner.nextLine();
+        System.out.print("Enter Car License Plate Number> ");
+        car.setCarLicensePlate(scanner.nextLine().trim());
+        System.out.print("Enter Car Colour> ");
+        car.setCarColour(scanner.nextLine().trim());
+        try {
+            carSessionBeanRemote.updateCar(car);
+            System.out.println("Car updated successfully!: " + car.getCarId() + "\n");
+        } catch (CarNotFoundException ex) {
+            System.out.println("An error has occurred while retrieving car!: The record is not found!\n");
+        } catch (InputDataValidationException ex) {
+            System.out.println("Data validation check failed! Input data did not satisfy 1 or more constraints!");
+        }
+
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doDeleteCar() {
+        Scanner scanner = new Scanner(System.in);
 
+        Integer response = 0;
+        System.out.println("*** CaRMS :: Operations :: Delete Car ***\n");
+        System.out.print("Enter Car License Plate> ");
+        String carLicensePlate = scanner.nextLine().trim();
+
+        System.out.printf("%4s%30s%30s%30s%20s%15s\n", "ID", "License Plate Number", "Make", "Model Name", "Car Status", "Is Enabled");
+        System.out.println("-------------------------------------------------------------------------------------------------------------");
+        try {
+            Car car = carSessionBeanRemote.retrieveCarByLicensePlate(carLicensePlate);
+            Long carId = car.getCarId();
+            String isEnabled = "Enabled";
+            if (!car.getCarIsEnabled()) {
+                isEnabled = "Disabled";
+            }
+            System.out.printf("%4s%30s%30s%30s%20s%15s\n", car.getCarId(), car.getCarLicensePlate(), car.getCarModel().getCarMake(), car.getCarModel().getModelName(), car.getCarStatus(), isEnabled);
+            carSessionBeanRemote.deleteCar(carId);
+            System.out.println("Car deleted successfully!: [" + carId + "] \n");
+        } catch (CarNotFoundException ex) {
+            System.out.println("Car license plate number [" + carLicensePlate + "] does not exist!");
+        }
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doViewTransitDriverDispatchRecordsForCurrentDayReservations() {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doAssignTransitDriver() {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
     private void doUpdateTransitAsCompleted() {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("Press <Enter> key to continue> ");
+        scanner.nextLine();
     }
 
 }

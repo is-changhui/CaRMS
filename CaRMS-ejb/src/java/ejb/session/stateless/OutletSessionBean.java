@@ -5,12 +5,14 @@
  */
 package ejb.session.stateless;
 
-import entity.Employee;
 import entity.Outlet;
+import entity.RentalRate;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -18,12 +20,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import util.exception.EmployeeNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OutletExistException;
 import util.exception.OutletNotFoundException;
 import util.exception.UnknownPersistenceException;
-import util.exception.UpdateEmployeeException;
 import util.exception.UpdateOutletException;
 
 /**
@@ -90,6 +90,18 @@ public class OutletSessionBean implements OutletSessionBeanRemote, OutletSession
             return outletEntity;
         } else {
             throw new OutletNotFoundException("Outlet ID [" + outletId + "] does not exist!");
+        }
+    }
+    
+    @Override
+    public Outlet retrieveOutletByName(String outletName) throws OutletNotFoundException {
+        Query query = em.createQuery("SELECT o FROM Outlet o WHERE o.outletName = :inOutletName");
+        query.setParameter("inOutletName", outletName);
+
+        try {
+            return (Outlet) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new OutletNotFoundException("Outlet name [" + outletName + "] does not exist!");
         }
     }
     

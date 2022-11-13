@@ -99,9 +99,11 @@ public class DataInitSessionBean {
     private void loadTestData() {
 
         try {
-            Long aId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A", null, null));
-            Long bId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B", null, null));
-            Long cId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", "08:00", "22:00"));
+            Long aId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet A", "A"));
+            Long bId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet B", "B"));
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Long cId = outletSessionBeanLocal.createNewOutlet(new Outlet("Outlet C", "C", sdf.parse("12/11/2022 08:00"), sdf.parse("12/11/2022 22:00")));
 
             Employee a1 = new Employee("Employee A1", "A1", "password", EmployeeAccessRightEnum.SALES_MANAGER);
             Long a1Id = employeeSessionBeanLocal.createNewEmployeeJoinOutlet(a1, aId);
@@ -169,7 +171,6 @@ public class DataInitSessionBean {
             Car c4A6 = new Car("LS00C4A6", "white", Boolean.TRUE, "Available");
             Long c4A6Id = carSessionBeanLocal.createNewCarJoinCarModelJoinOutlet(c4A6, audiA6Id, cId);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             Date alwaysValidStartDateTime = null;
             Date alwaysValidEndDateTime = null;
 //            Date alwaysValidStartDateTime = sdf.parse("01/01/1900 00:00");

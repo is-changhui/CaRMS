@@ -12,6 +12,8 @@ import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -37,7 +39,7 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
 
     @PersistenceContext(unitName = "CaRMS-ejbPU")
     private EntityManager em;
-    
+
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
     // Add business logic below. (Right-click in editor and choose
@@ -73,13 +75,13 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
-    
+
     // For use in DataInitSessionBean
     @Override
     public Long createNewCarModelJoinCarCategory(CarModel newCarModel, Long carCategoryId) throws CarModelExistException, UnknownPersistenceException, InputDataValidationException, CarCategoryNotFoundException {
         try {
-            Set<ConstraintViolation<CarModel>>constraintViolations = validator.validate(newCarModel);
-            
+            Set<ConstraintViolation<CarModel>> constraintViolations = validator.validate(newCarModel);
+
             if (constraintViolations.isEmpty()) {
                 try {
                     CarCategory carCategory = carCategorySessionBeanLocal.retrieveCarCategoryById(carCategoryId);
@@ -105,17 +107,19 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
             }
         } catch (CarCategoryNotFoundException ex) {
             throw new CarCategoryNotFoundException("Car Category ID [" + carCategoryId + "] does not exist!");
-        } 
+        }
     }
 
+    // MCUC15
     @Override
     public List<CarModel> retrieveAllCarModels() {
-        Query query = em.createQuery("SELECT e FROM CarModel e");
+        // MCUC15.2: ascending order by car category, make, model
+        Query query = em.createQuery("SELECT cm FROM CarModel cm ORDER BY cm.carCategory.categoryName, cm.carMake, cm.modelName ASC");
         return query.getResultList();
     }
 
     @Override
-    public CarModel retrieveCarModelByCarModelId(Long carModelId) throws CarModelNotFoundException {
+    public CarModel retrieveCarModelById(Long carModelId) throws CarModelNotFoundException {
         CarModel carModelFinding = em.find(CarModel.class, carModelId);
 
         if (carModelFinding != null) {
@@ -125,17 +129,62 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
         }
     }
 
-//    @Override
-//    public Car retrieveCarByModel(String model) throws CarNotFoundException {
-//        Query query = em.createQuery("SELECT e FROM Employee e WHERE e.employeeUsername = :inEmployeeUsername");
-//        query.setParameter("inEmployeeUsername", username);
-//        
-//        try {
-//            return (Employee)query.getSingleResult();
-//        } catch (NoResultException | NonUniqueResultException ex) {
-//            throw new EmployeeNotFoundException("Employee Username " + username + " does not exist!");
-//        }
-//    }
+    @Override
+    public CarModel retrieveCarModelByModelName(String carModelName) throws CarModelNotFoundException {
+        Query query = em.createQuery("SELECT cm FROM CarModel cm WHERE cm.modelName = :inCarModelName");
+        query.setParameter("inCarModelName", carModelName);
+
+        try {
+            return (CarModel) query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new CarModelNotFoundException("Car Model name [" + carModelName + "] does not exist!");
+        }
+    }
+
+    // MCUC16
+    @Override
+    public void updateCarModel(CarModel carModel, Long updatedCarCategoryId) throws CarModelNotFoundException, CarCategoryNotFoundException, InputDataValidationException {
+
+        if (carModel != null && carModel.getModelId() != null) {
+            Set<ConstraintViolation<CarModel>> constraintViolations = validator.validate(carModel);
+
+            if (constraintViolations.isEmpty()) {
+                CarModel carModelRecordToUpdate = retrieveCarModelById(carModel.getModelId());
+                carModelRecordToUpdate.setCarMake(carModel.getCarMake());
+                carModelRecordToUpdate.setModelName(carModel.getModelName());
+                carModelRecordToUpdate.setModelIsEnabled(carModel.isModelIsEnabled());
+                carModelRecordToUpdate.setCars(carModel.getCars());
+                try {
+                    CarCategory carCategory = carCategorySessionBeanLocal.retrieveCarCategoryById(updatedCarCategoryId);
+                    carModelRecordToUpdate.setCarCategory(carCategory);
+                } catch (CarCategoryNotFoundException ex) {
+                    throw new CarCategoryNotFoundException("Car Category ID [" + updatedCarCategoryId + "] not found!");
+                }
+            } else {
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        } else {
+            throw new CarModelNotFoundException("Car Model ID [" + carModel.getModelName() + "] does not exist!");
+        }
+    }
+
+    // MCUC17
+    @Override
+    public void deleteCarModel(Long carModelId) throws CarModelNotFoundException {
+
+        try {
+            CarModel carModelToRemove = retrieveCarModelById(carModelId);
+            // if there are cars tied to this model, then the model is considered being used and cannot be deleted
+            if (carModelToRemove.getCars().isEmpty()) {
+                em.remove(carModelToRemove);
+            } else {
+                carModelToRemove.setModelIsEnabled(Boolean.FALSE);
+            }
+        } catch (CarModelNotFoundException ex) {
+            throw new CarModelNotFoundException("Car Model ID [" + carModelId + "] cannot be found!");
+        }
+    }
+
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<CarModel>> constraintViolations) {
         String msg = "Input data validation error!:";
 
@@ -145,10 +194,5 @@ public class CarModelSessionBean implements CarModelSessionBeanRemote, CarModelS
 
         return msg;
     }
-//    @Override
-//    public Long createNewCar(Car newCar) throws EmployeeUsernameExistException, UnknownPersistenceException, InputDataValidationException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//    
-//    
+
 }

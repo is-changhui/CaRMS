@@ -59,9 +59,9 @@ public class Car implements Serializable {
     private RentalReservation rentalReservation;
     
     // To address location of car: if outlet is not null, it is at outlet, else
-    // based on carStatusEnum, we will know if its with customer or outlet
+    // based on carStatus, we will know if its with customer or outlet
     @ManyToOne(optional = true)
-    @JoinColumn(nullable = false)
+//    @JoinColumn(nullable = false)
     private Outlet outlet;
 
     
@@ -107,20 +107,6 @@ public class Car implements Serializable {
      */
     public void setCarColour(String carColour) {
         this.carColour = carColour;
-    }
-
-    /**
-     * @return the carIsUsed
-     */
-    public Boolean getCarIsUsed() {
-        return getCarIsEnabled();
-    }
-
-    /**
-     * @param carIsUsed the carIsUsed to set
-     */
-    public void setCarIsUsed(Boolean carIsUsed) {
-        this.setCarIsEnabled(carIsUsed);
     }
 
     /**

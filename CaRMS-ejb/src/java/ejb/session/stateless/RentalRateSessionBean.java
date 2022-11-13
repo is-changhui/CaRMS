@@ -7,6 +7,10 @@ package ejb.session.stateless;
 
 import entity.CarCategory;
 import entity.RentalRate;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -22,6 +26,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CarCategoryNotFoundException;
+import util.exception.EmptyRentalRateException;
 import util.exception.InputDataValidationException;
 import util.exception.RentalRateRecordExistException;
 import util.exception.RentalRateRecordNotFoundException;
@@ -151,9 +156,12 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
 
         if (rentalRate != null && rentalRate.getRentalRateId() != null) {
 
-            RentalRate rentalRateRecordToUpdate = retrieveRentalRateById(rentalRate.getRentalRateId());
+            Set<ConstraintViolation<RentalRate>> constraintViolations = validator.validate(rentalRate);
 
-            if (rentalRateRecordToUpdate.getRentalRateName().equals(rentalRate.getRentalRateName())) {
+            if (constraintViolations.isEmpty()) {
+                RentalRate rentalRateRecordToUpdate = retrieveRentalRateById(rentalRate.getRentalRateId());
+
+                rentalRateRecordToUpdate.setRentalRateName(rentalRate.getRentalRateName());
                 rentalRateRecordToUpdate.setRentalRateType(rentalRate.getRentalRateType());
                 rentalRateRecordToUpdate.setRentalDailyRate(rentalRate.getRentalDailyRate());
                 rentalRateRecordToUpdate.setRentalRateStartDateTime(rentalRate.getRentalRateStartDateTime());
@@ -169,7 +177,7 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
         }
     }
 
-    // MCUC13
+// MCUC13
     @Override
     public void deleteRentalRate(Long rentalRateId) throws RentalRateRecordNotFoundException {
 
@@ -181,8 +189,22 @@ public class RentalRateSessionBean implements RentalRateSessionBeanRemote, Renta
                 rentalRateToRemove.setIsEnabled(Boolean.FALSE);
             }
         } catch (RentalRateRecordNotFoundException ex) {
-            throw new RentalRateRecordNotFoundException("RentalRate ID [" + rentalRateId + "] is being used at the moment and cannot be deleted!");
+            throw new RentalRateRecordNotFoundException("RentalRate ID [" + rentalRateId + "] cannot be found!");
         }
+    }
+
+    @Override
+    public RentalRate retrieveLowestRentalRateForTheDay(Long carCategoryId, Date currentCheckingDate) throws EmptyRentalRateException {
+        // Rental rate must be valid with the period accounting for currentCheckingDate potentially being start and end date of the rental rate
+        Query query = em.createQuery("SELECT r FROM RentalRate r WHERE (r.carCategory.categoryId = :inCarCategoryId) AND (r.rentalRateStartDateTime <= :inCurrentCheckingDate AND r.rentalRateEndDateTime >= :inCurrentCheckingDate) OR (r.rentalRateStartDateTime IS NULL AND r.rentalRateEndDateTime IS NULL) ORDER BY r.rentalDailyRate ASC");
+        query.setParameter("inCurrentCheckingDate", currentCheckingDate);
+        query.setParameter("inCarCategoryId", carCategoryId);
+        List<RentalRate> rentalRateList = query.getResultList();
+        if (rentalRateList.isEmpty()) {
+            throw new EmptyRentalRateException();
+        }
+        // Since we want the lowest rate, we shall take the first in the already sorted list
+        return rentalRateList.get(0);
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<RentalRate>> constraintViolations) {

@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Outlet implements Serializable {
 
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,50 +38,44 @@ public class Outlet implements Serializable {
     @NotNull
 //    @Size(min = 8, max = 32)
     private String outletAddress;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    private Date outletOpeningHour;
 //    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true, length = 32)
-//    @NotNull
-//    @Size(min = 8, max = 32)
-    private String outletOpeningHour;
-//    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true, length = 32)
-//    @NotNull
-//    @Size(min = 8, max = 32)
-    private String outletClosingHour;
-    
-    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    private Date outletClosingHour;
+
     @OneToMany(mappedBy = "outlet")
     private List<Employee> employees;
-    
+
     @OneToMany(mappedBy = "destinationOutlet")
     private List<TransitDriverDispatchRecord> transitDriverDispatchRecords;
-    
+
     @OneToMany(mappedBy = "outlet")
     private List<Car> cars;
-    
-    @OneToMany(mappedBy = "pickupOutlet")
-    private List<CarPickup> carPickupRecords;
-    
-    @OneToMany(mappedBy = "returnOutlet")
-    private List<CarReturn> carReturnRecords;
-    
+
 
     public Outlet() {
-        employees = new ArrayList<>(); 
+        employees = new ArrayList<>();
         transitDriverDispatchRecords = new ArrayList<>();
         cars = new ArrayList<>();
-        carPickupRecords = new ArrayList<>();
-        carReturnRecords = new ArrayList<>();
     }
 
-    public Outlet(String outletName, String outletAddress, String outletOpeningHour, String outletClosingHour) {
+    public Outlet(String outletName, String outletAddress, Date outletOpeningHour, Date outletClosingHour) {
         this();
         this.outletName = outletName;
         this.outletAddress = outletAddress;
         this.outletOpeningHour = outletOpeningHour;
         this.outletClosingHour = outletClosingHour;
     }
-    
+
+    public Outlet(String outletName, String outletAddress) {
+        this();
+        this.outletName = outletName;
+        this.outletAddress = outletAddress;
+    }
+
     public Long getOutletId() {
         return outletId;
     }
@@ -90,7 +83,7 @@ public class Outlet implements Serializable {
     public void setOutletId(Long outletId) {
         this.outletId = outletId;
     }
-    
+
     /**
      * @return the outletName
      */
@@ -118,8 +111,7 @@ public class Outlet implements Serializable {
     public void setOutletAddress(String outletAddress) {
         this.outletAddress = outletAddress;
     }
-    
-    
+
     /**
      * @return the employees
      */
@@ -142,7 +134,8 @@ public class Outlet implements Serializable {
     }
 
     /**
-     * @param transitDriverDispatchRecords the transitDriverDispatchRecords to set
+     * @param transitDriverDispatchRecords the transitDriverDispatchRecords to
+     * set
      */
     public void setTransitDriverDispatchRecords(List<TransitDriverDispatchRecord> transitDriverDispatchRecords) {
         this.transitDriverDispatchRecords = transitDriverDispatchRecords;
@@ -162,62 +155,35 @@ public class Outlet implements Serializable {
         this.cars = cars;
     }
 
-    /**
-     * @return the carPickupRecords
-     */
-    public List<CarPickup> getCarPickupRecords() {
-        return carPickupRecords;
-    }
 
-    /**
-     * @param carPickupRecords the carPickupRecords to set
-     */
-    public void setCarPickupRecords(List<CarPickup> carPickupRecords) {
-        this.carPickupRecords = carPickupRecords;
-    }
-
-    /**
-     * @return the carReturnRecords
-     */
-    public List<CarReturn> getCarReturnRecords() {
-        return carReturnRecords;
-    }
-
-    /**
-     * @param carReturnRecords the carReturnRecords to set
-     */
-    public void setCarReturnRecords(List<CarReturn> carReturnRecords) {
-        this.carReturnRecords = carReturnRecords;
-    }
-    
     /**
      * @return the outletOpeningHour
      */
-    public String getOutletOpeningHour() {
+    public Date getOutletOpeningHour() {
         return outletOpeningHour;
     }
 
     /**
      * @param outletOpeningHour the outletOpeningHour to set
      */
-    public void setOutletOpeningHour(String outletOpeningHour) {
+    public void setOutletOpeningHour(Date outletOpeningHour) {
         this.outletOpeningHour = outletOpeningHour;
     }
 
     /**
      * @return the outletClosingHour
      */
-    public String getOutletClosingHour() {
+    public Date getOutletClosingHour() {
         return outletClosingHour;
     }
 
     /**
      * @param outletClosingHour the outletClosingHour to set
      */
-    public void setOutletClosingHour(String outletClosingHour) {
+    public void setOutletClosingHour(Date outletClosingHour) {
         this.outletClosingHour = outletClosingHour;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -243,6 +209,4 @@ public class Outlet implements Serializable {
         return "entity.Outlet[ id=" + outletId + " ]";
     }
 
-
-    
 }
